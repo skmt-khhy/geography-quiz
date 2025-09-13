@@ -340,7 +340,82 @@ class GeographyGame {
         }
     }
 
-    showResult() { const resultScreen = document.getElementById('resultScreen'); resultScreen.classList.remove('hidden'); const resultTitleEl = document.getElementById('resultTitle'); const resultMessageEl = document.getElementById('resultMessage'); const plantMeasure = document.getElementById('plantMeasure'); const plantHeightText = document.getElementById('plantHeightText'); const finalPlantSvg = document.getElementById('finalPlantSvg'); const finalPlantContainer = document.getElementById('finalPlantContainer'); if (this.lives <= 0) { this.audioManager.playGameOverSound(); resultTitleEl.innerHTML = '<div class="game-over-text">ゲームオーバー！</div>'; resultMessageEl.textContent = 'またチャレンジしてね！'; } else { resultTitleEl.textContent = 'ゲームクリア！'; resultMessageEl.textContent = 'すごい！よくできました！'; } const plantHeightCm = this.plantGrowth * 10; const growthHeight = this.plantGrowth * 25; const containerHeight = Math.max(300, 150 + plantHeightCm * 2); finalPlantContainer.style.height = `${containerHeight}px`; const totalSvgHeight = growthHeight + 65; finalPlantSvg.setAttribute('viewBox', `0 0 150 ${totalSvgHeight}`); let rewardsHtml = ''; for (let i = 1; i <= this.plantGrowth; i++) { if (i > 0 && i % 5 === 0) { const flowerY = 150 - (i * 25 - 25); const flowerX = 75 + (i % 10 === 0 ? -20 : 15); rewardsHtml += `<g><path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/><path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/><rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/><rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/></g>`; } if (i === 10) { const insectY = 150 - (10 * 25) - 15; const butterflyX = 75 - 40; rewardsHtml += `<g transform="translate(${butterflyX}, ${insectY})"><rect x="14" y="10" width="2" height="10" fill="#000"/><rect x="13" y="11" width="4" height="8" fill="#A16207"/><rect x="10" y="8" width="4" height="4" fill="#E91E63"/><rect x="8" y="12" width="4" height="4" fill="#E91E63"/><rect x="16" y="8" width="4" height="4" fill="#E91E63"/><rect x="18" y="12" width="4" height="4" fill="#E91E63"/><rect x="13" y="9" width="1" height="1" fill="#000"/><rect x="16" y="9" width="1" height="1" fill="#000"/></g>`; } if (i === 20) { const insectY = 150 - (20 * 25) - 15; const dragonflyX = 75 + 10; rewardsHtml += `<g transform="translate(${dragonflyX}, ${insectY})"><rect x="13" y="0" width="4" height="20" fill="#22C55E"/><rect x="5" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="5" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="17" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="17" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><circle cx="15" cy="-2" r="3" fill="#000"/></g>`; } } const yTranslate = totalSvgHeight - 173; finalPlantSvg.innerHTML = `<g transform="translate(0, ${yTranslate})">${rewardsHtml}<rect x="73" y="${150 - growthHeight}" width="4" height="${growthHeight}" fill="#22C55E" stroke="#166534" stroke-width="1"/><g transform="translate(0, ${-growthHeight})">${this.getLeafSvg()}</g><g transform="translate(25, 0)"><path fill="#000" d="M33 148 H67 V149 H68 V150 H69 V171 H68 V172 H65 V173 H35 V172 H32 V171 H31 V150 H32 V149 H33 V148"/><path fill="#d97706" d="M34 149 H66 V150 H34 V149 M33 150 H32 V171 H33 V150 M67 150 H68 V171 H67 V150 M35 172 H65 V171 H35 V172"/><path fill="#f59e0b" d="M34 150 H66 V171 H34 V150"/></g></g>`; plantMeasure.innerHTML = ''; if (plantHeightCm > 0) { const step = Math.max(10, Math.ceil(plantHeightCm / 100) * 10); for (let i = 0; i <= plantHeightCm; i += step) { plantMeasure.innerHTML += `<div class="absolute w-full border-t border-dashed border-gray-400" style="bottom: ${i / plantHeightCm * 100}%;"><span class="absolute right-full text-xs text-white -mr-1 -translate-y-1/2 pr-1">${i}</span></div>`; } } plantHeightText.textContent = `${plantHeightCm}cm`; }
+    showResult() {
+        document.getElementById('resultScreen').classList.remove('hidden');
+        const resultTitleEl = document.getElementById('resultTitle');
+        const resultMessageEl = document.getElementById('resultMessage');
+        const plantMeasure = document.getElementById('plantMeasure');
+        const plantHeightText = document.getElementById('plantHeightText');
+        const finalPlantSvg = document.getElementById('finalPlantSvg');
+        const finalPlantContainer = document.getElementById('finalPlantContainer');
+
+        if (this.lives <= 0) {
+            this.audioManager.playGameOverSound();
+            resultTitleEl.innerHTML = '<div class="game-over-text">ゲームオーバー！</div>';
+        } else {
+            resultTitleEl.textContent = 'ゲームクリア！';
+        }
+
+        // ★★★★★ 修正ここから ★★★★★
+        let message = '';
+        const score = this.score;
+
+        if (score <= 3) {
+            message = '出直してこいニャ';
+        } else if (score <= 7) {
+            message = 'もっと食べたいニャ';
+        } else if (score <= 11) {
+            message = 'うまうま';
+        } else if (score <= 15) {
+            message = 'そろそろお腹いっぱいニャ';
+        } else if (score <= 19) {
+            message = '食べきれないニャ';
+        } else if (score <= 23) {
+            message = 'お腹爆発ニャ';
+        } else if (score <= 27) {
+            message = '余は満足ニャ';
+        } else { // score >= 28
+            message = 'あなたの子分にしてくれニャ';
+        }
+        resultMessageEl.textContent = message;
+        // ★★★★★ 修正ここまで ★★★★★
+
+        const plantHeightCm = this.plantGrowth * 10;
+        const growthHeight = this.plantGrowth * 25;
+
+        const containerHeight = Math.max(300, 150 + plantHeightCm * 2);
+        finalPlantContainer.style.height = `${containerHeight}px`;
+        const totalSvgHeight = growthHeight + 65;
+        finalPlantSvg.setAttribute('viewBox', `0 0 150 ${totalSvgHeight}`);
+        let rewardsHtml = '';
+        for (let i = 1; i <= this.plantGrowth; i++) {
+            if (i > 0 && i % 5 === 0) {
+                const flowerY = 150 - (i * 25 - 25);
+                const flowerX = 75 + (i % 10 === 0 ? -20 : 15);
+                rewardsHtml += `<g><path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/><path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/><rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/><rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/></g>`;
+            }
+            if (i === 10) {
+                const insectY = 150 - (10 * 25) - 15;
+                const butterflyX = 75 - 40;
+                rewardsHtml += `<g transform="translate(${butterflyX}, ${insectY})"><rect x="14" y="10" width="2" height="10" fill="#000"/><rect x="13" y="11" width="4" height="8" fill="#A16207"/><rect x="10" y="8" width="4" height="4" fill="#E91E63"/><rect x="8" y="12" width="4" height="4" fill="#E91E63"/><rect x="16" y="8" width="4" height="4" fill="#E91E63"/><rect x="18" y="12" width="4" height="4" fill="#E91E63"/><rect x="13" y="9" width="1" height="1" fill="#000"/><rect x="16" y="9" width="1" height="1" fill="#000"/></g>`;
+            }
+            if (i === 20) {
+                const insectY = 150 - (20 * 25) - 15;
+                const dragonflyX = 75 + 10;
+                rewardsHtml += `<g transform="translate(${dragonflyX}, ${insectY})"><rect x="13" y="0" width="4" height="20" fill="#22C55E"/><rect x="5" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="5" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="17" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="17" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><circle cx="15" cy="-2" r="3" fill="#000"/></g>`;
+            }
+        }
+        const yTranslate = totalSvgHeight - 173;
+        finalPlantSvg.innerHTML = `<g transform="translate(0, ${yTranslate})">${rewardsHtml}<rect x="73" y="${150 - growthHeight}" width="4" height="${growthHeight}" fill="#22C55E" stroke="#166534" stroke-width="1"/><g transform="translate(0, ${-growthHeight})">${this.getLeafSvg()}</g><g transform="translate(25, 0)"><path fill="#000" d="M33 148 H67 V149 H68 V150 H69 V171 H68 V172 H65 V173 H35 V172 H32 V171 H31 V150 H32 V149 H33 V148"/><path fill="#d97706" d="M34 149 H66 V150 H34 V149 M33 150 H32 V171 H33 V150 M67 150 H68 V171 H67 V150 M35 172 H65 V171 H35 V172"/><path fill="#f59e0b" d="M34 150 H66 V171 H34 V150"/></g></g>`;
+        plantMeasure.innerHTML = '';
+        if (plantHeightCm > 0) {
+            const step = Math.max(10, Math.ceil(plantHeightCm / 100) * 10);
+            for (let i = 0; i <= plantHeightCm; i += step) {
+                plantMeasure.innerHTML += `<div class="absolute w-full border-t border-dashed border-gray-400" style="bottom: ${i / plantHeightCm * 100}%;"><span class="absolute right-full text-xs text-white -mr-1 -translate-y-1/2 pr-1">${i}</span></div>`;
+            }
+        }
+        plantHeightText.textContent = `${plantHeightCm}cm`;
+    }
 }
 
 window.addEventListener('DOMContentLoaded', () => {

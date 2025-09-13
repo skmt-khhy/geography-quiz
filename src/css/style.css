@@ -224,3 +224,25 @@ body::before {
 .triple-speed .explosion-path { animation-duration: 0.13s; }
 .triple-speed .speech-bubble { transition-duration: 0.17s; }
 .triple-speed #ruleConfirmBtn { transition-duration: 0.17s; }
+
+/* Result Screen Speech Bubble */
+#resultMessageContainer {
+    max-width: 300px;
+}
+.result-speech-bubble {
+    border-radius: 8px;
+    position: relative;
+}
+.result-speech-bubble::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 12px solid transparent;
+    border-right-color: #f59e0b; /* 枠線の色に合わせる */
+    border-left: 0;
+    margin-top: -12px;
+    margin-left: -12px;
+}

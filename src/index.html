@@ -33,7 +33,7 @@
             <div id="speechBubbles" class="w-full">
                 <div class="speech-bubble pixel-card p-4 mb-4 text-center text-xl opacity-0">古代遺跡の奥　まぼろしの地理の種だ！</div>
                 <div class="speech-bubble pixel-card p-4 mb-4 text-center text-xl opacity-0">地理の知識を与えると育つらしい</div>
-                <div class="speech-bubble pixel-card p-4 mb-4 text-center text-xl opacity-0">じつにおいしそう…</div>
+                <div class="speech-bubble pixel-card p-4 mb-4 text-center text-xl opacity-0">じつにおいしそうニャ…</div>
             </div>
             <div id="ruleConfirmBtn" class="pixel-button p-4 text-2xl cursor-pointer mt-4 opacity-0">
                 わかった
@@ -153,8 +153,15 @@
                     </div>
                 </div>
             </div>
-            <div id="resultMessage" class="text-xl mb-6 text-amber-200 font-bold pixel-text"></div>
-            <button id="restartBtn" class="pixel-button py-4 px-8 text-xl">もう一度！</button>
+
+            <div class="flex items-center justify-center mt-6 min-h-[8rem]">
+                <img src="img/cat.svg" alt="黒猫" class="w-24 h-24 flex-shrink-0">
+                <div id="resultMessageContainer" class="relative ml-4">
+                    <div id="resultMessage" class="result-speech-bubble pixel-card p-4 text-xl text-left">
+                    </div>
+                </div>
+            </div>
+            <button id="restartBtn" class="pixel-button py-4 px-8 text-xl mt-6">もう一度！</button>
         </div>
     </div>
 
