@@ -294,40 +294,64 @@ class GeographyGame {
         const newHeight = this.plantGrowth * growthAmount;
         const baseY = 150;
 
-        // 各パーツとカメラ移動（plantGroup）にCSS Transitionを設定し、アニメーションを滑らかに
         stem.style.transition = 'height 0.5s ease-out, y 0.5s ease-out';
         leaves.style.transition = 'transform 0.5s ease-out';
         plantGroup.style.transition = 'transform 0.5s ease-out';
 
-        // 茎を伸ばす
         stem.setAttribute('height', newHeight);
         stem.setAttribute('y', baseY - newHeight);
 
-        // 葉を茎の先端に配置
         if (leaves.innerHTML === '') {
             leaves.innerHTML = this.getLeafSvg();
         }
         leaves.setAttribute('transform', `translate(0, ${-newHeight})`);
 
-        // ★★★★★ 修正ここから ★★★★★
-        // 植物が一定以上（75ユニット）伸びたら、SVG全体を下に移動させて葉を画面内に保つ
         const panAmount = newHeight > 75 ? newHeight - 75 : 0;
         plantGroup.setAttribute('transform', `translate(0, ${panAmount})`);
-        // ★★★★★ 修正ここまで ★★★★★
 
-        // 花を追加するロジック（変更なし）
-        if (shouldGrow && this.plantGrowth > 0 && this.plantGrowth % 5 === 0) {
-            const flowerY = baseY - (newHeight - growthAmount);
-            const flowerX = 75 + (this.plantGrowth % 10 === 0 ? -20 : 20);
-            const flower = document.createElementNS("http://www.w3.org/2000/svg", "g");
-            flower.innerHTML = `
-                <path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/>
-                <path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/>
-                <rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/>
-                <rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/>
-                <rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/>
-            `;
-            flowersContainer.appendChild(flower);
+        if (shouldGrow) {
+            // 花を追加 (5問ごと)
+            if (this.plantGrowth > 0 && this.plantGrowth % 5 === 0) {
+                const flowerY = baseY - (newHeight - growthAmount);
+                const flowerX = 75 + (this.plantGrowth % 10 === 0 ? -20 : 20);
+                const flower = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                flower.innerHTML = `<path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/><path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/><rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/><rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/>`;
+                flowersContainer.appendChild(flower);
+            }
+
+            const insectY = baseY - newHeight - 15;
+            // 蝶を追加 (10問正解時) - シンプルなドット絵風
+            if (this.plantGrowth === 10) {
+                const butterflyX = 75 - 40;
+                const butterfly = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                butterfly.innerHTML = `
+                    <g transform="translate(${butterflyX}, ${insectY})">
+                        <rect x="14" y="10" width="2" height="10" fill="#000"/>
+                        <rect x="13" y="11" width="4" height="8" fill="#A16207"/>
+                        <rect x="10" y="8" width="4" height="4" fill="#E91E63"/>
+                        <rect x="8" y="12" width="4" height="4" fill="#E91E63"/>
+                        <rect x="16" y="8" width="4" height="4" fill="#E91E63"/>
+                        <rect x="18" y="12" width="4" height="4" fill="#E91E63"/>
+                        <rect x="13" y="9" width="1" height="1" fill="#000"/>
+                        <rect x="16" y="9" width="1" height="1" fill="#000"/>
+                    </g>`;
+                flowersContainer.appendChild(butterfly);
+            }
+            // トンボを追加 (20問正解時) - シンプルなドット絵風
+            if (this.plantGrowth === 20) {
+                const dragonflyX = 75 + 10;
+                const dragonfly = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                dragonfly.innerHTML = `
+                    <g transform="translate(${dragonflyX}, ${insectY})">
+                        <rect x="13" y="0" width="4" height="20" fill="#22C55E"/>
+                        <rect x="5" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/>
+                        <rect x="5" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/>
+                        <rect x="17" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/>
+                        <rect x="17" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/>
+                        <circle cx="15" cy="-2" r="3" fill="#000"/>
+                    </g>`;
+                flowersContainer.appendChild(dragonfly);
+            }
         }
     }
 
@@ -482,7 +506,7 @@ class GeographyGame {
         const plantMeasure = document.getElementById('plantMeasure');
         const plantHeightText = document.getElementById('plantHeightText');
         const finalPlantSvg = document.getElementById('finalPlantSvg');
-        const finalPlantContainer = document.getElementById('finalPlantContainer'); // コンテナを取得
+        const finalPlantContainer = document.getElementById('finalPlantContainer');
 
         if (this.lives <= 0) {
             this.audioManager.playGameOverSound();
@@ -496,24 +520,49 @@ class GeographyGame {
         const plantHeightCm = this.plantGrowth * 10;
         const growthHeight = this.plantGrowth * 25;
 
-        // ★★★★★ 修正点 1 ★★★★★
-        // 植物の最終的な高さに応じて、コンテナの高さを動的に設定
-        // (基本300pxとし、身長に応じて高くする)
         const containerHeight = Math.max(300, 150 + plantHeightCm * 2);
         finalPlantContainer.style.height = `${containerHeight}px`;
 
-        // ★★★★★ 修正点 2 ★★★★★
-        // SVGの表示領域の高さを、植物全体の高さが収まるように再計算
-        // (65は鉢と葉のおおよその高さを足したもの)
         const totalSvgHeight = growthHeight + 65;
         finalPlantSvg.setAttribute('viewBox', `0 0 150 ${totalSvgHeight}`);
 
-        let flowersHtml = '';
+        let rewardsHtml = '';
         for (let i = 1; i <= this.plantGrowth; i++) {
+            // 花の描画
             if (i > 0 && i % 5 === 0) {
                 const flowerY = 150 - (i * 25 - 25);
                 const flowerX = 75 + (i % 10 === 0 ? -20 : 15);
-                flowersHtml += `<g><path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/><path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/><rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/><rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/></g>`;
+                rewardsHtml += `<g><path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/><path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/><rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/><rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/></g>`;
+            }
+            // 蝶の描画 (10問正解時)
+            if (i === 10) {
+                const insectY = 150 - (10 * 25) - 15;
+                const butterflyX = 75 - 40;
+                rewardsHtml += `
+                    <g transform="translate(${butterflyX}, ${insectY})">
+                        <rect x="14" y="10" width="2" height="10" fill="#000"/>
+                        <rect x="13" y="11" width="4" height="8" fill="#A16207"/>
+                        <rect x="10" y="8" width="4" height="4" fill="#E91E63"/>
+                        <rect x="8" y="12" width="4" height="4" fill="#E91E63"/>
+                        <rect x="16" y="8" width="4" height="4" fill="#E91E63"/>
+                        <rect x="18" y="12" width="4" height="4" fill="#E91E63"/>
+                        <rect x="13" y="9" width="1" height="1" fill="#000"/>
+                        <rect x="16" y="9" width="1" height="1" fill="#000"/>
+                    </g>`;
+            }
+            // トンボの描画 (20問正解時)
+            if (i === 20) {
+                const insectY = 150 - (20 * 25) - 15;
+                const dragonflyX = 75 + 10;
+                rewardsHtml += `
+                    <g transform="translate(${dragonflyX}, ${insectY})">
+                        <rect x="13" y="0" width="4" height="20" fill="#22C55E"/>
+                        <rect x="5" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/>
+                        <rect x="5" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/>
+                        <rect x="17" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/>
+                        <rect x="17" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/>
+                        <circle cx="15" cy="-2" r="3" fill="#000"/>
+                    </g>`;
             }
         }
 
@@ -521,13 +570,9 @@ class GeographyGame {
 
         finalPlantSvg.innerHTML = `
             <g transform="translate(0, ${yTranslate})">
-                ${flowersHtml}
+                ${rewardsHtml}
                 <rect x="73" y="${150 - growthHeight}" width="4" height="${growthHeight}" fill="#22C55E" stroke="#166534" stroke-width="1"/>
-                
-                <g transform="translate(0, ${-growthHeight})">
-                    ${this.getLeafSvg()}
-                </g>
-                
+                <g transform="translate(0, ${-growthHeight})">${this.getLeafSvg()}</g>
                 <g transform="translate(25, 0)">
                     <path fill="#000" d="M33 148 H67 V149 H68 V150 H69 V171 H68 V172 H65 V173 H35 V172 H32 V171 H31 V150 H32 V149 H33 V148"/>
                     <path fill="#d97706" d="M34 149 H66 V150 H34 V149 M33 150 H32 V171 H33 V150 M67 150 H68 V171 H67 V150 M35 172 H65 V171 H35 V172"/>
