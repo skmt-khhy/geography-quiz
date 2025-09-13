@@ -192,3 +192,35 @@ body::before {
 #ruleConfirmBtn {
     transition: opacity 0.5s ease-out;
 }
+
+/* Double Speed Mode Overrides */
+.double-speed .pulse { animation-duration: 0.75s; }
+.double-speed .shake { animation-duration: 0.25s; }
+.double-speed #resultSymbol { animation-duration: 0.5s; }
+.double-speed .bounce-in { animation-duration: 0.25s; }
+.double-speed .game-over-text { animation-duration: 0.75s; }
+.double-speed #wateringCan.animate { animation-duration: 0.75s; }
+.double-speed .water-drop { animation-duration: 0.75s; }
+.double-speed #plantEffect.grow, .double-speed #plantEffect.wilt { animation-duration: 0.75s; }
+.double-speed #plantLeaves.wilt { animation-duration: 0.75s; }
+.double-speed .heart-fall { animation-duration: 0.5s; }
+.double-speed .explosion-svg { animation-duration: 0.2s; }
+.double-speed .explosion-path { animation-duration: 0.2s; }
+.double-speed .speech-bubble { transition-duration: 0.25s; }
+.double-speed #ruleConfirmBtn { transition-duration: 0.25s; }
+
+/* Triple Speed Mode Overrides */
+.triple-speed .pulse { animation-duration: 0.5s; }
+.triple-speed .shake { animation-duration: 0.17s; }
+.triple-speed #resultSymbol { animation-duration: 0.33s; }
+.triple-speed .bounce-in { animation-duration: 0.17s; }
+.triple-speed .game-over-text { animation-duration: 0.5s; }
+.triple-speed #wateringCan.animate { animation-duration: 0.5s; }
+.triple-speed .water-drop { animation-duration: 0.5s; }
+.triple-speed #plantEffect.grow, .triple-speed #plantEffect.wilt { animation-duration: 0.5s; }
+.triple-speed #plantLeaves.wilt { animation-duration: 0.5s; }
+.triple-speed .heart-fall { animation-duration: 0.33s; }
+.triple-speed .explosion-svg { animation-duration: 0.13s; }
+.triple-speed .explosion-path { animation-duration: 0.13s; }
+.triple-speed .speech-bubble { transition-duration: 0.17s; }
+.triple-speed #ruleConfirmBtn { transition-duration: 0.17s; }

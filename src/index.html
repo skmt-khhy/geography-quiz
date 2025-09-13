@@ -12,13 +12,18 @@
 
 <body>
     <div id="startScreen" class="min-h-screen flex flex-col items-center justify-center p-4">
-        <div class="text-center">
-            <div class="text-6xl text-amber-300 font-bold mb-4 pixel-text leading-tight">まぼろしの</div>
-            <div class="text-7xl text-amber-300 font-bold mb-8 pixel-text">地理の種</div>
-            <div id="startButton" class="pixel-button p-6 text-4xl cursor-pointer pulse">
-                ▶ スタート！
+        <div id="startScreen" class="min-h-screen flex flex-col items-center justify-center p-4">
+            <div class="text-center">
+                <div class="text-6xl text-amber-300 font-bold mb-4 pixel-text leading-tight">まぼろしの</div>
+                <div class="text-7xl text-amber-300 font-bold mb-8 pixel-text">地理の種</div>
+                <div id="startButton" class="pixel-button p-6 text-4xl cursor-pointer pulse">
+                    ▶ スタート！
+                </div>
+                <div id="countdownDisplay" class="text-6xl text-amber-300 font-bold pixel-text mt-8"></div>
+                <div id="speedToggleButton" class="pixel-button mt-8 px-6 py-3 text-2xl cursor-pointer">
+                    速度: x1
+                </div>
             </div>
-            <div id="countdownDisplay" class="text-6xl text-amber-300 font-bold pixel-text mt-8"></div>
         </div>
     </div>
 
@@ -45,7 +50,8 @@
 
         <div id="plantContainer" class="w-full flex flex-col items-center justify-center relative my-4"
             style="flex: 4;">
-            <div id="wateringCan" class="absolute hidden z-20" style="top: 30%; left: 42%; transform: translateX(-50%);">
+            <div id="wateringCan" class="absolute hidden z-20"
+                style="top: 30%; left: 42%; transform: translateX(-50%);">
                 <svg width="120" height="120" viewBox="0 0 100 100">
                     <g transform="translate(3, 3)">
                         <path d="M 5 55 L 15 85 L 75 85 L 65 55 Z" fill="#333" />
