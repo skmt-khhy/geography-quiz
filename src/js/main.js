@@ -365,15 +365,33 @@ class GeographyGame {
             contentDiv.innerHTML = `<img src="${question.content}" alt="問題画像" class="mx-auto pixel-border" style="width: 300px; height: 220px; object-fit: contain; background: #9376F0;">`;
         }
 
+        // ★★★★★ 修正点 2: 選択肢のランダム化 ★★★★★
+        // 選択肢を、元のインデックス情報を持ったオブジェクトの配列に変換
+        const indexedChoices = question.choices.map((choice, index) => ({
+            text: choice,
+            originalIndex: index
+        }));
+
+        // 選択肢の配列をシャッフル
+        this.shuffleArray(indexedChoices);
+
         const choiceBtns = document.querySelectorAll('.choice-btn');
         const colors = ['bg-red-500', 'bg-blue-500', 'bg-yellow-500', 'bg-green-500'];
-        const textColors = ['text-white', 'text-white', 'text-black', 'text-white'];
 
         choiceBtns.forEach((btn, index) => {
-            btn.textContent = question.choices[index];
+            const choiceData = indexedChoices[index];
+
+            // シャッフル後のテキストと、正解判定用の元のインデックスをボタンに設定
+            btn.textContent = choiceData.text;
+            btn.dataset.answer = choiceData.originalIndex;
+
+            // ★★★★★ 修正点 1: ボタンデザインの統一 ★★★★★
             btn.className = 'choice-btn pixel-button py-4 px-4 text-lg';
-            btn.classList.add(colors[index], textColors[index]); btn.disabled = false;
-            btn.style.cssText = ''; // Clear inline styles
+            // 文字色の個別指定を削除し、CSSのデフォルト（濃い茶色）が適用されるようにする
+            btn.classList.add(colors[index]);
+
+            btn.disabled = false;
+            btn.style.cssText = '';
         });
     }
 
