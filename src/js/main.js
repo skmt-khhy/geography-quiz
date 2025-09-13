@@ -317,9 +317,11 @@ class GeographyGame {
 
     selectAnswer(e) {
         if (e.target.disabled) return;
+
         const isCorrect = parseInt(e.target.dataset.answer) === this.questions[this.currentQuestionIndex].correct;
         clearInterval(this.timer);
         document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
+
         if (isCorrect) {
             this.audioManager.playCorrectSound();
             e.target.style.background = '#22c55e';
@@ -331,11 +333,21 @@ class GeographyGame {
             e.target.style.backgroundImage = 'none';
             this.updateLivesDisplay(true);
             this.lives--;
-            const correctBtn = document.querySelectorAll('.choice-btn')[this.questions[this.currentQuestionIndex].correct];
-            correctBtn.style.background = '#22c55e';
-            correctBtn.style.backgroundImage = 'none';
+
+            // ★★★★★ 修正ここから ★★★★★
+            // 正解の選択肢を探して緑色にハイライトする
+            const correctIndex = this.questions[this.currentQuestionIndex].correct;
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                if (parseInt(btn.dataset.answer) === correctIndex) {
+                    btn.style.background = '#22c55e';
+                    btn.style.backgroundImage = 'none';
+                }
+            });
+            // ★★★★★ 修正ここまで ★★★★★
+
             this.showResultSymbol('×', '#60a5fa');
         }
+
         setTimeout(() => { this.nextStep(isCorrect); }, 1500 / this.speedMultiplier);
     }
 
