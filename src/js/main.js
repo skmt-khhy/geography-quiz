@@ -211,7 +211,55 @@ class GeographyGame {
         leaves.setAttribute('transform', `translate(0, ${-newHeight})`);
         const panAmount = newHeight > 75 ? newHeight - 75 : 0;
         plantGroup.setAttribute('transform', `translate(0, ${panAmount})`);
-        if (shouldGrow) { if (this.plantGrowth > 0 && this.plantGrowth % 5 === 0) { const flowerY = baseY - (newHeight - growthAmount); const flowerX = 75 + (this.plantGrowth % 10 === 0 ? -20 : 20); const flower = document.createElementNS("http://www.w3.org/2000/svg", "g"); flower.innerHTML = `<path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/><path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/><rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/><rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/>`; flowersContainer.appendChild(flower); } const insectY = baseY - newHeight - 15; if (this.plantGrowth === 10) { const butterflyX = 75 - 40; const butterfly = document.createElementNS("http://www.w3.org/2000/svg", "g"); butterfly.innerHTML = `<g transform="translate(${butterflyX}, ${insectY})"><rect x="14" y="10" width="2" height="10" fill="#000"/><rect x="13" y="11" width="4" height="8" fill="#A16207"/><rect x="10" y="8" width="4" height="4" fill="#E91E63"/><rect x="8" y="12" width="4" height="4" fill="#E91E63"/><rect x="16" y="8" width="4" height="4" fill="#E91E63"/><rect x="18" y="12" width="4" height="4" fill="#E91E63"/><rect x="13" y="9" width="1" height="1" fill="#000"/><rect x="16" y="9" width="1" height="1" fill="#000"/></g>`; flowersContainer.appendChild(butterfly); } if (this.plantGrowth === 20) { const dragonflyX = 75 + 10; const dragonfly = document.createElementNS("http://www.w3.org/2000/svg", "g"); dragonfly.innerHTML = `<g transform="translate(${dragonflyX}, ${insectY})"><rect x="13" y="0" width="4" height="20" fill="#22C55E"/><rect x="5" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="5" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="17" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="17" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><circle cx="15" cy="-2" r="3" fill="#000"/></g>`; flowersContainer.appendChild(dragonfly); } }
+        if (shouldGrow) {
+            // ★★★★★ 花のSVGをピクトグラム風に変更 ★★★★★
+            if (this.plantGrowth > 0 && this.plantGrowth % 5 === 0) {
+                const flowerY = baseY - (newHeight - growthAmount) - 5; // 位置調整
+                const flowerX = 75 + (this.plantGrowth % 10 === 0 ? -20 : 20);
+                const flower = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                flower.innerHTML = `
+                    <g transform="translate(${flowerX - 10}, ${flowerY - 10}) scale(0.8)">
+                        <circle cx="15" cy="15" r="5" fill="#FBBF24"/>
+                        <circle cx="15" cy="5" r="4" fill="#F87171"/>
+                        <circle cx="23" cy="10" r="4" fill="#F87171"/>
+                        <circle cx="23" cy="20" r="4" fill="#F87171"/>
+                        <circle cx="15" cy="25" r="4" fill="#F87171"/>
+                        <circle cx="7" cy="20" r="4" fill="#F87171"/>
+                        <circle cx="7" cy="10" r="4" fill="#F87171"/>
+                    </g>`;
+                flowersContainer.appendChild(flower);
+            }
+            const insectY = baseY - newHeight - 15;
+            // ★★★★★ 蝶々のSVGをピクトグラム風に変更 ★★★★★
+            if (this.plantGrowth === 10) {
+                const butterflyX = 75 - 40;
+                const butterfly = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                butterfly.innerHTML = `
+                    <g transform="translate(${butterflyX}, ${insectY}) scale(0.8)">
+                        <rect x="14" y="10" width="2" height="10" fill="#654321"/>
+                        <path d="M15 10 Q 5 0, 0 10 Q 5 20, 15 20 Z" fill="#E91E63"/>
+                        <path d="M15 10 Q 25 0, 30 10 Q 25 20, 15 20 Z" fill="#E91E63"/>
+                        <circle cx="10" cy="10" r="2" fill="#FFEB3B"/>
+                        <circle cx="20" cy="10" r="2" fill="#FFEB3B"/>
+                    </g>`;
+                flowersContainer.appendChild(butterfly);
+            }
+            // ★★★★★ トンボのSVGをピクトグラム風に変更 ★★★★★
+            if (this.plantGrowth === 20) {
+                const dragonflyX = 75 + 10;
+                const dragonfly = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                dragonfly.innerHTML = `
+                    <g transform="translate(${dragonflyX}, ${insectY}) scale(0.8)">
+                        <rect x="14" y="0" width="2" height="25" fill="#22C55E"/>
+                        <ellipse cx="10" cy="8" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/>
+                        <ellipse cx="10" cy="18" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/>
+                        <ellipse cx="20" cy="8" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/>
+                        <ellipse cx="20" cy="18" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/>
+                        <circle cx="15" cy="-2" r="3" fill="#000"/>
+                    </g>`;
+                flowersContainer.appendChild(dragonfly);
+            }
+        }
     }
 
     showGameScreen() {
@@ -390,19 +438,18 @@ class GeographyGame {
         let rewardsHtml = '';
         for (let i = 1; i <= this.plantGrowth; i++) {
             if (i > 0 && i % 5 === 0) {
-                const flowerY = 150 - (i * 25 - 25);
+                const flowerY = 150 - (i * 25 - 25) - 5;
                 const flowerX = 75 + (i % 10 === 0 ? -20 : 15);
-                rewardsHtml += `<g><path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/><path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/><rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/><rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/></g>`;
+                rewardsHtml += `<g transform="translate(${flowerX - 10}, ${flowerY - 10}) scale(0.8)"><circle cx="15" cy="15" r="5" fill="#FBBF24"/><circle cx="15" cy="5" r="4" fill="#F87171"/><circle cx="23" cy="10" r="4" fill="#F87171"/><circle cx="23" cy="20" r="4" fill="#F87171"/><circle cx="15" cy="25" r="4" fill="#F87171"/><circle cx="7" cy="20" r="4" fill="#F87171"/><circle cx="7" cy="10" r="4" fill="#F87171"/></g>`;
             }
+            const insectY = 150 - (i * 25) - 15;
             if (i === 10) {
-                const insectY = 150 - (10 * 25) - 15;
                 const butterflyX = 75 - 40;
-                rewardsHtml += `<g transform="translate(${butterflyX}, ${insectY})"><rect x="14" y="10" width="2" height="10" fill="#000"/><rect x="13" y="11" width="4" height="8" fill="#A16207"/><rect x="10" y="8" width="4" height="4" fill="#E91E63"/><rect x="8" y="12" width="4" height="4" fill="#E91E63"/><rect x="16" y="8" width="4" height="4" fill="#E91E63"/><rect x="18" y="12" width="4" height="4" fill="#E91E63"/><rect x="13" y="9" width="1" height="1" fill="#000"/><rect x="16" y="9" width="1" height="1" fill="#000"/></g>`;
+                rewardsHtml += `<g transform="translate(${butterflyX}, ${insectY}) scale(0.8)"><rect x="14" y="10" width="2" height="10" fill="#654321"/><path d="M15 10 Q 5 0, 0 10 Q 5 20, 15 20 Z" fill="#E91E63"/><path d="M15 10 Q 25 0, 30 10 Q 25 20, 15 20 Z" fill="#E91E63"/><circle cx="10" cy="10" r="2" fill="#FFEB3B"/><circle cx="20" cy="10" r="2" fill="#FFEB3B"/></g>`;
             }
             if (i === 20) {
-                const insectY = 150 - (20 * 25) - 15;
                 const dragonflyX = 75 + 10;
-                rewardsHtml += `<g transform="translate(${dragonflyX}, ${insectY})"><rect x="13" y="0" width="4" height="20" fill="#22C55E"/><rect x="5" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="5" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="17" y="2" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><rect x="17" y="8" width="8" height="4" fill="#A5F3FC" opacity="0.7"/><circle cx="15" cy="-2" r="3" fill="#000"/></g>`;
+                rewardsHtml += `<g transform="translate(${dragonflyX}, ${insectY}) scale(0.8)"><rect x="14" y="0" width="2" height="25" fill="#22C55E"/><ellipse cx="10" cy="8" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><ellipse cx="10" cy="18" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><ellipse cx="20" cy="8" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><ellipse cx="20" cy="18" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><circle cx="15" cy="-2" r="3" fill="#000"/></g>`;
             }
         }
         const yTranslate = totalSvgHeight - 173;
