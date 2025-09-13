@@ -190,7 +190,18 @@ class GeographyGame {
         }
     }
 
-    getLeafSvg() { return `<path d="M73 145 q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#000"/><path d="M72 144 q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#22C55E"/><path d="M72 144 q -10 -5 -15 -15" stroke="#166534" stroke-width="1.5" fill="none"/><path d="M77 145 q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#000"/><path d="M78 144 q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#22C55E"/><path d="M78 144 q 10 -5 15 -15" stroke="#166534" stroke-width="1.5" fill="none"/>`; }
+    getLeafSvg() {
+        const baseY = 150;
+        return `
+            <path d="M73 ${baseY - 5} q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#000"/>
+            <path d="M72 ${baseY - 6} q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#22C55E"/>
+            <path d="M72 ${baseY - 6} q -10 -5 -15 -15" stroke="#166534" stroke-width="1.5" fill="none"/>
+
+            <path d="M77 ${baseY - 5} q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#000"/>
+            <path d="M78 ${baseY - 6} q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#22C55E"/>
+            <path d="M78 ${baseY - 6} q 10 -5 15 -15" stroke="#166534" stroke-width="1.5" fill="none"/>
+        `;
+    }
 
     growPlant(shouldGrow = true) {
         if (shouldGrow) this.plantGrowth++;
