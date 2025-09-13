@@ -294,25 +294,30 @@ class GeographyGame {
         const newHeight = this.plantGrowth * growthAmount;
         const baseY = 150;
 
-        // CSS Transitionを追加してアニメーションを滑らかにする
+        // 各パーツとカメラ移動（plantGroup）にCSS Transitionを設定し、アニメーションを滑らかに
         stem.style.transition = 'height 0.5s ease-out, y 0.5s ease-out';
         leaves.style.transition = 'transform 0.5s ease-out';
+        plantGroup.style.transition = 'transform 0.5s ease-out';
 
-        // 茎の高さとY座標を更新
+        // 茎を伸ばす
         stem.setAttribute('height', newHeight);
         stem.setAttribute('y', baseY - newHeight);
 
-        // 葉のSVGは初回のみ描画
+        // 葉を茎の先端に配置
         if (leaves.innerHTML === '') {
             leaves.innerHTML = this.getLeafSvg();
         }
-
-        // 葉のコンテナを茎の成長分だけ上に移動させる
         leaves.setAttribute('transform', `translate(0, ${-newHeight})`);
 
-        // 花を追加するロジック (花のコンテナ自体は動かさない)
+        // ★★★★★ 修正ここから ★★★★★
+        // 植物が一定以上（75ユニット）伸びたら、SVG全体を下に移動させて葉を画面内に保つ
+        const panAmount = newHeight > 75 ? newHeight - 75 : 0;
+        plantGroup.setAttribute('transform', `translate(0, ${panAmount})`);
+        // ★★★★★ 修正ここまで ★★★★★
+
+        // 花を追加するロジック（変更なし）
         if (shouldGrow && this.plantGrowth > 0 && this.plantGrowth % 5 === 0) {
-            const flowerY = baseY - (newHeight - growthAmount); // 花が咲く絶対Y座標
+            const flowerY = baseY - (newHeight - growthAmount);
             const flowerX = 75 + (this.plantGrowth % 10 === 0 ? -20 : 20);
             const flower = document.createElementNS("http://www.w3.org/2000/svg", "g");
             flower.innerHTML = `
@@ -324,9 +329,6 @@ class GeographyGame {
             `;
             flowersContainer.appendChild(flower);
         }
-
-        // plantGroup全体のtransformは不要なため削除
-        plantGroup.removeAttribute('transform');
     }
 
     showGameScreen() {
@@ -462,6 +464,7 @@ class GeographyGame {
         const plantMeasure = document.getElementById('plantMeasure');
         const plantHeightText = document.getElementById('plantHeightText');
         const finalPlantSvg = document.getElementById('finalPlantSvg');
+        const finalPlantContainer = document.getElementById('finalPlantContainer'); // コンテナを取得
 
         if (this.lives <= 0) {
             this.audioManager.playGameOverSound();
@@ -476,10 +479,15 @@ class GeographyGame {
         const growthHeight = this.plantGrowth * 25;
 
         // ★★★★★ 修正点 1 ★★★★★
-        // SVGの表示領域の高さを、植物全体の高さ（茎＋葉＋鉢植え）に合わせる
-        // これにより、不要な余白がなくなり、植物が正しく拡大表示される
-        const totalSvgHeight = growthHeight + 50; // 50 = 鉢の高さ(約25) + 葉の高さ(約25)
+        // 植物の最終的な高さに応じて、コンテナの高さを動的に設定
+        // (基本300pxとし、身長に応じて高くする)
+        const containerHeight = Math.max(300, 150 + plantHeightCm * 2);
+        finalPlantContainer.style.height = `${containerHeight}px`;
 
+        // ★★★★★ 修正点 2 ★★★★★
+        // SVGの表示領域の高さを、植物全体の高さが収まるように再計算
+        // (65は鉢と葉のおおよその高さを足したもの)
+        const totalSvgHeight = growthHeight + 65;
         finalPlantSvg.setAttribute('viewBox', `0 0 150 ${totalSvgHeight}`);
 
         let flowersHtml = '';
@@ -491,9 +499,7 @@ class GeographyGame {
             }
         }
 
-        // ★★★★★ 修正点 2 ★★★★★
-        // 新しいviewBoxの高さに合わせて、植物全体を移動させる量を再計算
-        const yTranslate = totalSvgHeight - 173; // 173は鉢の底のY座標
+        const yTranslate = totalSvgHeight - 173;
 
         finalPlantSvg.innerHTML = `
             <g transform="translate(0, ${yTranslate})">
