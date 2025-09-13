@@ -282,10 +282,12 @@ class GeographyGame {
         document.getElementById('startButton').onclick = async () => {
             await this.audioManager.initSfx();
             document.getElementById('startButton').style.display = 'none';
-            document.getElementById('speedToggleButton').style.display = 'none'; // ★ ボタンを隠す
+            document.getElementById('speedToggleButton').style.display = 'none';
             this.startCountdown();
         };
-        document.getElementById('restartBtn').addEventListener('click', () => window.location.reload());
+
+        // ★★★★★ `restartBtn`のイベントリスナーはshowResult内で設定するため、ここからは削除 ★★★★★
+
         document.querySelectorAll('.choice-btn').forEach(btn => {
             btn.addEventListener('click', (e) => this.selectAnswer(e));
         });
@@ -294,15 +296,11 @@ class GeographyGame {
             this.transitionToNextQuestion(false);
         };
 
-        // ★ 速度切替ボタンのイベント
         const speedToggleButton = document.getElementById('speedToggleButton');
         speedToggleButton.addEventListener('click', () => {
-            this.speedLevel = this.speedLevel % 3 + 1; // 1, 2, 3をループ
+            this.speedLevel = this.speedLevel % 3 + 1;
             speedToggleButton.textContent = `速度: x${this.speedLevel}`;
-
             this.audioManager.setSpeed(this.speedMultiplier);
-
-            // CSSクラスを管理
             document.body.classList.remove('double-speed', 'triple-speed');
             if (this.speedLevel === 2) {
                 document.body.classList.add('double-speed');
@@ -310,6 +308,16 @@ class GeographyGame {
                 document.body.classList.add('triple-speed');
             }
         });
+
+        // ★★★★★ 修正ここから ★★★★★
+        // エンディング画面の「タイトルに戻る」ボタン
+        document.getElementById('titleButton').addEventListener('click', () => window.location.reload());
+
+        // デバッグ用: スタート画面左上クリックでエンディング表示
+        document.getElementById('debugEndingTrigger').addEventListener('click', () => {
+            this.showEndingScreen();
+        });
+        // ★★★★★ 修正ここまで ★★★★★
     }
 
     showQuestion() {
@@ -419,6 +427,7 @@ class GeographyGame {
         const plantHeightText = document.getElementById('plantHeightText');
         const finalPlantSvg = document.getElementById('finalPlantSvg');
         const finalPlantContainer = document.getElementById('finalPlantContainer');
+        const restartBtn = document.getElementById('restartBtn'); // ★ ボタンを取得
 
         if (this.lives <= 0) {
             this.audioManager.playGameOverSound();
@@ -427,64 +436,83 @@ class GeographyGame {
             resultTitleEl.textContent = 'ゲームクリア！';
         }
 
-        // ★★★★★ 修正ここから ★★★★★
+        // ... (メッセージ判定ロジックは変更なし) ...
         let message = '';
         const score = this.score;
-
-        if (score <= 3) {
-            message = '出直してこいニャ';
-        } else if (score <= 7) {
-            message = 'もっと食べたいニャ';
-        } else if (score <= 11) {
-            message = 'うまうま';
-        } else if (score <= 15) {
-            message = 'そろそろお腹いっぱいニャ';
-        } else if (score <= 19) {
-            message = '食べきれないニャ';
-        } else if (score <= 23) {
-            message = 'お腹爆発ニャ';
-        } else if (score <= 27) {
-            message = '余は満足ニャ';
-        } else { // score >= 28
-            message = 'あなたの子分にしてくれニャ';
-        }
+        if (score <= 3) { message = '出直してこいニャ'; } else if (score <= 7) { message = 'もっと食べたいニャ'; } else if (score <= 11) { message = 'うまうま'; } else if (score <= 15) { message = 'そろそろお腹いっぱいニャ'; } else if (score <= 19) { message = '食べきれないニャ'; } else if (score <= 23) { message = 'お腹爆発ニャ'; } else if (score <= 27) { message = '余は満足ニャ'; } else { message = 'あなたの子分にしてくれニャ'; }
         resultMessageEl.textContent = message;
-        // ★★★★★ 修正ここまで ★★★★★
 
+        // ... (植物の高さ計算と描画ロジックは変更なし) ...
         const plantHeightCm = this.plantGrowth * 10;
         const growthHeight = this.plantGrowth * 25;
-
         const containerHeight = Math.max(300, 150 + plantHeightCm * 2);
         finalPlantContainer.style.height = `${containerHeight}px`;
         const totalSvgHeight = growthHeight + 65;
         finalPlantSvg.setAttribute('viewBox', `0 0 150 ${totalSvgHeight}`);
         let rewardsHtml = '';
-        for (let i = 1; i <= this.plantGrowth; i++) {
-            if (i > 0 && i % 5 === 0) {
-                const flowerY = 150 - (i * 25 - 25) - 5;
-                const flowerX = 75 + (i % 10 === 0 ? -20 : 15);
-                rewardsHtml += `<g transform="translate(${flowerX - 10}, ${flowerY - 10}) scale(0.8)"><circle cx="15" cy="15" r="5" fill="#FBBF24"/><circle cx="15" cy="5" r="4" fill="#F87171"/><circle cx="23" cy="10" r="4" fill="#F87171"/><circle cx="23" cy="20" r="4" fill="#F87171"/><circle cx="15" cy="25" r="4" fill="#F87171"/><circle cx="7" cy="20" r="4" fill="#F87171"/><circle cx="7" cy="10" r="4" fill="#F87171"/></g>`;
-            }
-            const insectY = 150 - (i * 25) - 15;
-            if (i === 10) {
-                const butterflyX = 75 - 40;
-                rewardsHtml += `<g transform="translate(${butterflyX}, ${insectY}) scale(0.8)"><rect x="14" y="10" width="2" height="10" fill="#654321"/><path d="M15 10 Q 5 0, 0 10 Q 5 20, 15 20 Z" fill="#E91E63"/><path d="M15 10 Q 25 0, 30 10 Q 25 20, 15 20 Z" fill="#E91E63"/><circle cx="10" cy="10" r="2" fill="#FFEB3B"/><circle cx="20" cy="10" r="2" fill="#FFEB3B"/></g>`;
-            }
-            if (i === 20) {
-                const dragonflyX = 75 + 10;
-                rewardsHtml += `<g transform="translate(${dragonflyX}, ${insectY}) scale(0.8)"><rect x="14" y="0" width="2" height="25" fill="#22C55E"/><ellipse cx="10" cy="8" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><ellipse cx="10" cy="18" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><ellipse cx="20" cy="8" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><ellipse cx="20" cy="18" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><circle cx="15" cy="-2" r="3" fill="#000"/></g>`;
-            }
-        }
+        for (let i = 1; i <= this.plantGrowth; i++) { if (i > 0 && i % 5 === 0) { const flowerY = 150 - (i * 25 - 25) - 5; const flowerX = 75 + (i % 10 === 0 ? -20 : 15); rewardsHtml += `<g transform="translate(${flowerX - 10}, ${flowerY - 10}) scale(0.8)"><circle cx="15" cy="15" r="5" fill="#FBBF24"/><circle cx="15" cy="5" r="4" fill="#F87171"/><circle cx="23" cy="10" r="4" fill="#F87171"/><circle cx="23" cy="20" r="4" fill="#F87171"/><circle cx="15" cy="25" r="4" fill="#F87171"/><circle cx="7" cy="20" r="4" fill="#F87171"/><circle cx="7" cy="10" r="4" fill="#F87171"/></g>`; } const insectY = 150 - (i * 25) - 15; if (i === 10) { const butterflyX = 75 - 40; rewardsHtml += `<g transform="translate(${butterflyX}, ${insectY}) scale(0.8)"><rect x="14" y="10" width="2" height="10" fill="#654321"/><path d="M15 10 Q 5 0, 0 10 Q 5 20, 15 20 Z" fill="#E91E63"/><path d="M15 10 Q 25 0, 30 10 Q 25 20, 15 20 Z" fill="#E91E63"/><circle cx="10" cy="10" r="2" fill="#FFEB3B"/><circle cx="20" cy="10" r="2" fill="#FFEB3B"/></g>`; } if (i === 20) { const dragonflyX = 75 + 10; rewardsHtml += `<g transform="translate(${dragonflyX}, ${insectY}) scale(0.8)"><rect x="14" y="0" width="2" height="25" fill="#22C55E"/><ellipse cx="10" cy="8" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><ellipse cx="10" cy="18" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><ellipse cx="20" cy="8" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><ellipse cx="20" cy="18" rx="8" ry="4" fill="#A5F3FC" opacity="0.7"/><circle cx="15" cy="-2" r="3" fill="#000"/></g>`; } }
         const yTranslate = totalSvgHeight - 173;
         finalPlantSvg.innerHTML = `<g transform="translate(0, ${yTranslate})">${rewardsHtml}<rect x="73" y="${150 - growthHeight}" width="4" height="${growthHeight}" fill="#22C55E" stroke="#166534" stroke-width="1"/><g transform="translate(0, ${-growthHeight})">${this.getLeafSvg()}</g><g transform="translate(25, 0)"><path fill="#000" d="M33 148 H67 V149 H68 V150 H69 V171 H68 V172 H65 V173 H35 V172 H32 V171 H31 V150 H32 V149 H33 V148"/><path fill="#d97706" d="M34 149 H66 V150 H34 V149 M33 150 H32 V171 H33 V150 M67 150 H68 V171 H67 V150 M35 172 H65 V171 H35 V172"/><path fill="#f59e0b" d="M34 150 H66 V171 H34 V150"/></g></g>`;
-        plantMeasure.innerHTML = '';
-        if (plantHeightCm > 0) {
-            const step = Math.max(10, Math.ceil(plantHeightCm / 100) * 10);
-            for (let i = 0; i <= plantHeightCm; i += step) {
-                plantMeasure.innerHTML += `<div class="absolute w-full border-t border-dashed border-gray-400" style="bottom: ${i / plantHeightCm * 100}%;"><span class="absolute right-full text-xs text-white -mr-1 -translate-y-1/2 pr-1">${i}</span></div>`;
-            }
-        }
+        plantMeasure.innerHTML = ''; if (plantHeightCm > 0) { const step = Math.max(10, Math.ceil(plantHeightCm / 100) * 10); for (let i = 0; i <= plantHeightCm; i += step) { plantMeasure.innerHTML += `<div class="absolute w-full border-t border-dashed border-gray-400" style="bottom: ${i / plantHeightCm * 100}%;"><span class="absolute right-full text-xs text-white -mr-1 -translate-y-1/2 pr-1">${i}</span></div>`; } }
         plantHeightText.textContent = `${plantHeightCm}cm`;
+
+        // ★★★★★ 修正ここから ★★★★★
+        // 全問正解かつライフが残っている場合、ボタンの挙動を変更
+        if (this.score === this.questions.length && this.lives > 0) {
+            restartBtn.textContent = 'エンディングへ';
+            restartBtn.onclick = () => {
+                this.showEndingScreen();
+            };
+        } else {
+            restartBtn.textContent = 'もう一度！';
+            restartBtn.onclick = () => {
+                window.location.reload();
+            };
+        }
+        // ★★★★★ 修正ここまで ★★★★★
+    }
+
+    // エンディング画面を表示するメソッドを新規追加
+    showEndingScreen() {
+        document.getElementById('startScreen').classList.add('hidden');
+        document.getElementById('resultScreen').classList.add('hidden');
+        const endingScreen = document.getElementById('endingScreen');
+        endingScreen.classList.remove('hidden');
+
+        const textContainer = document.getElementById('endingTextContainer');
+        const titleButton = document.getElementById('titleButton');
+
+        const lines = [
+            '地理の種は育ち、花を咲かせた。',
+            '古代の植物は復活した',
+            '…ように思えたが、',
+            'そうだ、美味しい猫草は',
+            'ぜんぶ自分の胃の中ニャ。',
+            'さーて、竜一に帰ろっと。'
+        ];
+
+        textContainer.innerHTML = '';
+
+        lines.forEach(lineText => {
+            const lineDiv = document.createElement('div');
+            lineDiv.className = 'pixel-card p-4 mb-4 text-center text-2xl ending-line';
+            lineDiv.textContent = lineText;
+            textContainer.appendChild(lineDiv);
+        });
+
+        const lineElements = document.querySelectorAll('#endingTextContainer .ending-line');
+        const delay = 1800 / this.speedMultiplier;
+
+        lineElements.forEach((line, index) => {
+            setTimeout(() => {
+                line.style.opacity = '1';
+                line.style.transform = 'translateY(0)';
+            }, index * delay);
+        });
+
+        setTimeout(() => {
+            titleButton.style.opacity = '1';
+        }, lines.length * delay);
     }
 }
 

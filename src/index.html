@@ -12,24 +12,41 @@
 
 <body>
     <div id="startScreen" class="min-h-screen flex flex-col items-center justify-center p-4">
-        <div id="startScreen" class="min-h-screen flex flex-col items-center justify-center p-4">
-            <div class="text-center">
-                <div class="text-6xl text-amber-300 font-bold mb-4 pixel-text leading-tight">まぼろしの</div>
-                <div class="text-7xl text-amber-300 font-bold mb-8 pixel-text">地理の種</div>
-                <div id="startButton" class="pixel-button p-6 text-4xl cursor-pointer pulse">
-                    ▶ スタート！
-                </div>
-                <div id="countdownDisplay" class="text-6xl text-amber-300 font-bold pixel-text mt-8"></div>
-                <div id="speedToggleButton" class="pixel-button mt-8 px-6 py-3 text-2xl cursor-pointer">
-                    速度: x1
-                </div>
+
+        <div id="debugEndingTrigger"
+            style="position: absolute; top: 0; left: 0; width: 5px; height: 5px; cursor: pointer; z-index: 100;">
+        </div>
+
+        <div class="text-center">
+            <div class="text-6xl text-amber-300 font-bold mb-4 pixel-text leading-tight">まぼろしの</div>
+            <div class="text-7xl text-amber-300 font-bold mb-8 pixel-text">地理の種</div>
+            <div id="startButton" class="pixel-button p-6 text-4xl cursor-pointer pulse">
+                ▶ スタート！
+            </div>
+            <div id="countdownDisplay" class="text-6xl text-amber-300 font-bold pixel-text mt-8"></div>
+            <div id="speedToggleButton" class="pixel-button mt-8 px-6 py-3 text-2xl cursor-pointer">
+                速度: x1
             </div>
         </div>
     </div>
 
     <div id="ruleScreen" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
         <div class="relative max-w-lg w-full flex flex-col items-center">
-            <img src="img/cat.svg" alt="黒猫" class="w-48 h-48 mb-[-20px] z-10">
+
+            <div class="flex items-end justify-center w-full mb-[-20px] z-10">
+                <img src="img/cat.svg" alt="黒猫" class="w-48 h-48">
+
+                <div class="w-24 h-24 ml-4">
+                    <svg viewBox="40 110 70 40">
+                        <path d="M73 145 q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#000" />
+                        <path d="M72 144 q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#22C55E" />
+                        <path d="M72 144 q -10 -5 -15 -15" stroke="#166534" stroke-width="1.5" fill="none" />
+                        <path d="M77 145 q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#000" />
+                        <path d="M78 144 q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#22C55E" />
+                        <path d="M78 144 q 10 -5 15 -15" stroke="#166534" stroke-width="1.5" fill="none" />
+                    </svg>
+                </div>
+            </div>
             <div id="speechBubbles" class="w-full">
                 <div class="speech-bubble pixel-card p-4 mb-4 text-center text-xl opacity-0">古代遺跡の奥　まぼろしの地理の種だ！</div>
                 <div class="speech-bubble pixel-card p-4 mb-4 text-center text-xl opacity-0">地理の知識を与えると育つらしい</div>
@@ -163,7 +180,15 @@
             <button id="restartBtn" class="pixel-button py-4 px-8 text-xl mt-6">もう一度！</button>
         </div>
     </div>
-
+    <div id="endingScreen" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="max-w-xl w-full text-center">
+            <div id="endingTextContainer" class="w-full">
+            </div>
+            <div id="titleButton" class="pixel-button p-4 text-2xl cursor-pointer mt-8 opacity-0 inline-block">
+                タイトルに戻る
+            </div>
+        </div>
+    </div>
     <script src="js/main.js"></script>
 </body>
 
