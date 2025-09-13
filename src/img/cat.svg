@@ -1,0 +1,10 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 95 C 80 95, 85 65, 85 50 C 85 25, 65 10, 50 10 C 35 10, 15 25, 15 50 C 15 65, 20 95, 50 95 Z" fill="black"/>
+    <path d="M20 20 L35 10 L40 25 Z" fill="black"/>
+    <path d="M80 20 L65 10 L60 25 Z" fill="black"/>
+    <path d="M30 35 a 5 5 0 0 1 10 0 a 5 5 0 0 1 -10 0" fill="white"/>
+    <path d="M60 35 a 5 5 0 0 1 10 0 a 5 5 0 0 1 -10 0" fill="white"/>
+    <path d="M33 35 a 2 2 0 0 1 4 0 a 2 2 0 0 1 -4 0" fill="black"/>
+    <path d="M63 35 a 2 2 0 0 1 4 0 a 2 2 0 0 1 -4 0" fill="black"/>
+    <path d="M45 55 Q 50 65 55 55" stroke="white" stroke-width="2" fill="none"/>
+</svg>

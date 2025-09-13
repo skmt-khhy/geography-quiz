@@ -1,0 +1,1140 @@
+
+--- index.html ---
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地理 - ピクセルゲーム</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="startScreen" class="min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="text-center">
+            <div class="text-6xl text-amber-300 font-bold mb-4 pixel-text leading-tight">まぼろしの</div>
+            <div class="text-7xl text-amber-300 font-bold mb-8 pixel-text">地理の種</div>
+            <div id="startButton" class="pixel-button p-6 text-4xl cursor-pointer pulse">
+                ▶ スタート！
+            </div>
+            <div id="countdownDisplay" class="text-6xl text-amber-300 font-bold pixel-text mt-8"></div>
+        </div>
+    </div>
+
+    <div id="ruleScreen" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="relative max-w-lg w-full flex flex-col items-center">
+            <img src="img/cat.svg" alt="黒猫" class="w-48 h-48 mb-[-20px] z-10">
+            <div id="speechBubbles" class="w-full">
+                <div class="speech-bubble pixel-card p-4 mb-4 text-center text-xl opacity-0">古代遺跡の奥　まぼろしの地理の種だ！</div>
+                <div class="speech-bubble pixel-card p-4 mb-4 text-center text-xl opacity-0">地理の知識を与えると育つらしい</div>
+                <div class="speech-bubble pixel-card p-4 mb-4 text-center text-xl opacity-0">じつにおいしそう…</div>
+            </div>
+            <div id="ruleConfirmBtn" class="pixel-button p-4 text-2xl cursor-pointer mt-4 opacity-0">
+                わかった
+            </div>
+        </div>
+    </div>
+
+    <div id="lifeScreen" class="hidden min-h-screen flex flex-col justify-between items-center p-4 overflow-hidden">
+        <div class="w-full flex justify-center pt-8" style="flex: 1;">
+            <div id="nextQuestionDisplay" class="next-question-font text-6xl text-amber-300 pixel-text px-4 py-2 bg-black bg-opacity-50 rounded-lg">NEXT 01</div>
+        </div>
+         
+        <div id="plantContainer" class="w-full flex flex-col items-center justify-center relative my-4" style="flex: 4;">
+            <div id="wateringCan" class="absolute hidden top-1/3 left-1/2 -translate-x-1/2 z-20">
+                <svg width="120" height="120" viewBox="0 0 24 24">
+                    <path fill="#000" d="M3 13h1v1h1v1h1v1h8v-1h1v-1h1v-1h2v-1h1v-1h1v4h-1v1h-1v1h-2v1h-1v1H8v-1H7v-1H5v-1H4v-1H3v-4zm15 1h1v1h-1v-1zm-1 1h-1v1h1v-1zm-10 2h1v1h-1v-1zm1 1h6v1h-6v-1z M19 13h2v-1h1v-1h1v-1h-1V9h-1V8h-2v1h-1v4h1v-1z"/>
+                    <path fill="#c0c0c0" d="M4 14h1v1h1v1h8v-1h1v-1h2v-1h1v4h-1v1h-2v1h-1v1H8v-1H5v-1H4v-3zm14 1h-1v1h1v-1zm-1 1h-1v1h1v-1zm-10 2h1v1h-1v-1zm2 1h6v-1h-6v1z M20 12h1v-1h1v-1h-1V9h-1v3zm0-3h1V8h-1v1z"/>
+                    <g id="waterDrops">
+                        <path class="water-drop" fill="#87CEEB" stroke="#000" stroke-width="0.5" d="M22 13 q 2 3 0 5 q -2 2 -4 0 q -2 -3 0 -5 q 2 -2 4 0" />
+                        <path class="water-drop" style="animation-delay: 0.1s" fill="#87CEEB" stroke="#000" stroke-width="0.5" d="M24 15 q 2 3 0 5 q -2 2 -4 0 q -2 -3 0 -5 q 2 -2 4 0" />
+                    </g>
+                </svg>
+            </div>
+             <svg id="plantSvg" width="450" height="600" viewBox="0 0 150 200" class="absolute bottom-0 z-10">
+                <g id="plantGroup">
+                    <g id="flowersContainer"></g>
+                    <rect id="plantStem" x="73" y="150" width="4" height="0" fill="#22C55E" stroke="#166534" stroke-width="1"/>
+                    <g id="plantLeaves"></g>
+                    <g id="plantPot"></g>
+                </g>
+            </svg>
+            <div id="plantEffect" class="absolute hidden rounded-full opacity-0 z-0"></div>
+        </div>
+
+        <div class="w-full flex justify-center pb-8" style="flex: 1;">
+            <div id="livesContainer" class="flex items-center justify-center gap-4 p-4 bg-black bg-opacity-50 rounded-lg"></div>
+        </div>
+    </div>
+
+    <div id="gameScreen" class="hidden min-h-screen flex flex-col justify-center max-w-2xl mx-auto p-4">
+        <div id="questionText" class="text-center text-3xl text-amber-300 pixel-text mb-4 p-2 bg-black bg-opacity-75 rounded-lg"></div>
+        <div class="flex-grow flex items-center justify-center p-4">
+            <div id="questionContent" class="text-center"></div>
+        </div>
+        <div class="p-4">
+            <div id="choices" class="grid grid-cols-2 gap-4">
+                <button class="choice-btn pixel-button py-4 px-4 text-lg" data-answer="0">選択肢1</button>
+                <button class="choice-btn pixel-button py-4 px-4 text-lg" data-answer="1">選択肢2</button>
+                <button class="choice-btn pixel-button py-4 px-4 text-lg" data-answer="2">選択肢3</button>
+                <button class="choice-btn pixel-button py-4 px-4 text-lg" data-answer="3">選択肢4</button>
+            </div>
+        </div>
+        <div class="p-3 relative flex items-center justify-center">
+            <div id="bombContainer" class="relative w-28 h-28 flex-shrink-0">
+                <svg width="100%" height="100%" viewBox="0 0 48 48"><rect x="12" y="20" width="24" height="24" fill="#333333"/><rect x="8" y="24" width="32" height="16" fill="#333333"/><rect x="28" y="8" width="4" height="12" fill="#A16207"/><rect x="32" y="4" width="8" height="8" fill="#F59E0B"/><rect x="30" y="10" width="4" height="4" fill="#FEF08A"/></svg>
+                <div id="explosionEffect" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden z-20">
+                    <svg width="150" height="150" viewBox="0 0 100 100" class="explosion-svg">
+                        <path d="M50 0 L65 30 L95 20 L80 50 L100 65 L70 70 L80 95 L50 80 L20 95 L30 70 L0 65 L20 50 L5 20 L35 30 Z" fill="orange" class="explosion-path"/>
+                        <path d="M50 10 L60 30 L80 25 L70 50 L90 60 L60 65 L70 85 L50 75 L30 85 L40 65 L10 60 L30 50 L20 25 L40 30 Z" fill="yellow" class="explosion-path"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="fuseContainer" class="flex-1 h-3 bg-yellow-800 rounded-r-full overflow-hidden relative">
+                <div id="timerBar" class="h-full bg-gradient-to-r from-red-500 via-orange-400 to-yellow-300" style="width: 100%;"></div>
+                <div id="spark" class="absolute top-1/2 w-6 h-6 -translate-y-1/2">
+                    <svg viewBox="0 0 16 16"><path fill="white" d="M8 0 L10 6 L16 8 L10 10 L8 16 L6 10 L0 8 L6 6 Z"/></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+    <div id="resultOverlay" class="hidden fixed inset-0 result-overlay flex items-center justify-center z-50">
+        <div id="resultSymbol" class="font-bold pixel-text"></div>
+    </div>
+     
+    <div id="resultScreen" class="hidden min-h-screen flex flex-col items-center justify-center p-8">
+        <div class="pixel-card p-8 text-center max-w-2xl w-full bounce-in">
+            <div id="resultTitle" class="text-4xl mb-4 text-amber-300 font-bold pixel-text"></div>
+            <div id="finalPlantContainer" class="w-full flex justify-center items-end my-4" style="height: 300px;">
+                <div class="relative flex items-end h-full">
+                    <svg id="finalPlantSvg" viewBox="0 0 100 100" class="h-full w-auto"></svg>
+                    <div id="plantMeasure" class="h-full w-4 bg-gray-700 ml-4 relative"></div>
+                    <div id="plantHeightText" class="absolute text-xl font-bold text-white pixel-text -right-24 bottom-1/2 translate-y-1/2"></div>
+                </div>
+            </div>
+            <div id="resultMessage" class="text-xl mb-6 text-amber-200 font-bold pixel-text"></div>
+            <button id="restartBtn" class="pixel-button py-4 px-8 text-xl">もう一度！</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
+
+--- questions.json ---
+[
+    {
+        "title": "「鉄は国家なり」のスローガンで発展した福岡県の工業都市は？",
+        "content": "img/steel.svg",
+        "choices": [
+            "福岡市",
+            "北九州市",
+            "大牟田市",
+            "久留米市"
+        ],
+        "correct": 1
+    },
+    {
+        "title": "自動車産業が特に盛んで「クルマのまち」として知られる愛知県の都市は？",
+        "content": "img/car.svg",
+        "choices": [
+            "名古屋市",
+            "豊橋市",
+            "豊田市",
+            "岡崎市"
+        ],
+        "correct": 2
+    },
+    {
+        "title": "石油化学コンビナートが広がる三重県の工業都市は？",
+        "content": "img/oil.svg",
+        "choices": [
+            "津市",
+            "四日市市",
+            "伊勢市",
+            "鈴鹿市"
+        ],
+        "correct": 1
+    },
+    {
+        "title": "東京湾岸に広がる日本最大の工業地帯の名前は？",
+        "content": "img/factory.svg",
+        "choices": [
+            "阪神工業地帯",
+            "中京工業地帯",
+            "京浜工業地帯",
+            "瀬戸内工業地域"
+        ],
+        "correct": 2
+    },
+    {
+        "title": "大阪府堺市などで大規模なコンビナートが見られる工業地帯は？",
+        "content": "img/factory_night.svg",
+        "choices": [
+            "阪神工業地帯",
+            "北陸工業地域",
+            "東海工業地域",
+            "関東内陸工業地域"
+        ],
+        "correct": 0
+    },
+    {
+        "title": "静岡県に広がり、楽器やオートバイの生産で有名な工業地域は？",
+        "content": "img/piano.svg",
+        "choices": [
+            "京葉工業地域",
+            "東海工業地域",
+            "中央高地工業地域",
+            "北関東工業地域"
+        ],
+        "correct": 1
+    },
+    {
+        "title": "IC（集積回路）の生産が盛んで「シリコンアイランド」と呼ばれる九州地方にある空港はどこ？",
+        "content": "img/ic.svg",
+        "choices": [
+            "福岡空港",
+            "長崎空港",
+            "鹿児島空港",
+            "熊本空港"
+        ],
+        "correct": 3
+    },
+    {
+        "title": "ドイツで鉄鋼・石炭業で栄え、現在は先端技術産業へ転換した工業地域は？",
+        "content": "img/coal.svg",
+        "choices": [
+            "ルール工業地域",
+            "ザール工業地域",
+            "中部ドイツ工業地域",
+            "北部ドイツ工業地域"
+        ],
+        "correct": 0
+    },
+    {
+        "title": "フランス南部にあり、航空機産業の中心地として知られる都市は？",
+        "content": "img/plane.svg",
+        "choices": [
+            "パリ",
+            "マルセイユ",
+            "リヨン",
+            "トゥールーズ"
+        ],
+        "correct": 3
+    },
+    {
+        "title": "イタリア北部でミラノ、トリノ、ジェノバを結ぶ工業が盛んな地域を何と呼ぶ？",
+        "content": "img/gear.svg",
+        "choices": [
+            "第三のイタリア",
+            "工業の三角地帯",
+            "メッツォジョールノ",
+            "フランダース地方"
+        ],
+        "correct": 1
+    },
+    {
+        "title": "イギリスの産業革命で綿工業の中心地として発展した都市は？",
+        "content": "img/textile.svg",
+        "choices": [
+            "ロンドン",
+            "リヴァプール",
+            "マンチェスター",
+            "バーミンガム"
+        ],
+        "correct": 2
+    },
+    {
+        "title": "オランダにあり、ヨーロッパ最大の貿易港として知られるのは？",
+        "content": "img/ship.svg",
+        "choices": [
+            "アムステルダム",
+            "ロッテルダム",
+            "ハーグ",
+            "ユトレヒト"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "climate",
+        "title": "この雨温図の気候区分は？",
+        "content": "climate-af",
+        "choices": [
+            "Af(熱帯雨林)",
+            "Aw(サバナ)",
+            "Cfa(温暖湿潤)",
+            "Cfb(西岸海洋性)"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "climate",
+        "title": "この雨温図の気候区分は？",
+        "content": "climate-aw",
+        "choices": [
+            "Af(熱帯雨林)",
+            "Aw(サバナ)",
+            "BSh(ステップ)",
+            "BWh(砂漠)"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "climate",
+        "title": "この雨温図の気候区分は？",
+        "content": "climate-bwh",
+        "choices": [
+            "BWh(砂漠)",
+            "BSh(ステップ)",
+            "Csa(地中海性)",
+            "Cwb(高原)"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "climate",
+        "title": "この雨温図の気候区分は？",
+        "content": "climate-csa",
+        "choices": [
+            "Cfa(温暖湿潤)",
+            "Cfb(西岸海洋性)",
+            "Csa(地中海性)",
+            "Dfa(大陸性湿潤)"
+        ],
+        "correct": 2
+    },
+    {
+        "type": "climate",
+        "title": "この雨温図の気候区分は？",
+        "content": "climate-cfb",
+        "choices": [
+            "Cfb(西岸海洋性)",
+            "Cfa(温暖湿潤)",
+            "Dfb(大陸性湿潤)",
+            "ET(ツンドラ)"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "mountain",
+        "title": "世界で一番高い山は？",
+        "content": "img/mountain.svg",
+        "choices": [
+            "K2",
+            "エベレスト",
+            "カンチェンジュンガ",
+            "マカル"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "river",
+        "title": "世界で一番長い川は？",
+        "content": "img/river.svg",
+        "choices": [
+            "ナイル川",
+            "アマゾン川",
+            "長江",
+            "ミシシッピ川"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "desert",
+        "title": "世界で一番大きい砂漠は？",
+        "content": "img/desert.svg",
+        "choices": [
+            "サハラ砂漠",
+            "ゴビ砂漠",
+            "カラハリ砂漠",
+            "アタカマ砂漠"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "ocean",
+        "title": "世界で一番大きい海は？",
+        "content": "img/ocean.svg",
+        "choices": [
+            "太平洋",
+            "大西洋",
+            "インド洋",
+            "北極海"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "capital",
+        "title": "スイスの首都は？",
+        "content": "img/city.svg",
+        "choices": [
+            "チューリッヒ",
+            "ベルン",
+            "ジュネーヴ",
+            "バーゼル"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "capital",
+        "title": "オーストラリアの首都は？",
+        "content": "img/city.svg",
+        "choices": [
+            "シドニー",
+            "メルボルン",
+            "キャンベラ",
+            "パース"
+        ],
+        "correct": 2
+    },
+    {
+        "type": "country",
+        "title": "世界で一番大きい国は？",
+        "content": "img/world.svg",
+        "choices": [
+            "カナダ",
+            "ロシア",
+            "アメリカ",
+            "中国"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "island",
+        "title": "世界で一番大きい島は？",
+        "content": "img/island.svg",
+        "choices": [
+            "グリーンランド",
+            "ニューギニア島",
+            "ボルネオ島",
+            "マダガスカル島"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "agriculture",
+        "title": "世界最大の小麦生産国は？",
+        "content": "img/wheat.svg",
+        "choices": [
+            "アメリカ",
+            "中国",
+            "インド",
+            "ロシア"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "agriculture",
+        "title": "世界最大の米生産国は？",
+        "content": "img/rice.svg",
+        "choices": [
+            "中国",
+            "インド",
+            "インドネシア",
+            "バングラデシュ"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "resource",
+        "title": "世界最大の石油埋蔵国は？",
+        "content": "img/oil_field.svg",
+        "choices": [
+            "サウジアラビア",
+            "ベネズエラ",
+            "カナダ",
+            "イラン"
+        ],
+        "correct": 1
+    }
+]
+
+--- css\style.css ---
+@import url('https://fonts.googleapis.com/css2?family=RocknRoll+One&display=swap');
+
+body {
+    background-color: #3a2a22; /* Dark brown background */
+    color: #FFD700; /* Gold text */
+    font-family: 'RocknRoll One', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Mysterious background text */
+body::before {
+    content: "ヌワエミソラツネキフユコヘホテアサチセヨタリニナラムメモヤユヨワヰヱヲンカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポアイウエオカキクケコサシスタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポアサチセヨタリニナラムメモヤユヨワヰヱヲンカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポアイウエオカキクケコサシスタチツテトナニヌネノハヒフヘホマミムメ";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    color: rgba(255, 215, 0, 0.08); /* Faint gold */
+    font-size: 28px;
+    font-family: 'serif';
+    line-height: 1.5;
+    letter-spacing: 12px;
+    text-align: center;
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow: hidden;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.pixel-text {
+    text-shadow: 2px 2px 0 #000, 4px 4px 0 rgba(0,0,0,0.5);
+}
+
+.next-question-font {
+    text-shadow: 4px 4px 0 #000;
+}
+
+.pixel-button {
+    border: 4px solid #1c1917;
+    box-shadow: 6px 6px 0 #1c1917;
+    transition: all 0.1s ease-in-out;
+    background-image: linear-gradient(to bottom, #fde047, #f59e0b);
+    color: #1c1917;
+    font-weight: bold;
+}
+
+.pixel-button:active {
+    box-shadow: 2px 2px 0 #1c1917;
+    transform: translate(4px, 4px);
+}
+
+.pixel-card {
+    background-color: rgba(0,0,0,0.7);
+    border: 4px solid #f59e0b;
+    box-shadow: 0 0 15px rgba(253, 224, 71, 0.4), 8px 8px 0 rgba(0,0,0,0.5);
+    border-radius: 8px;
+    color: white;
+}
+
+.pixel-border {
+    border: 4px solid #000;
+    box-shadow: 4px 4px 0 #000;
+}
+
+.pulse {
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.shake {
+    animation: shake 0.5s;
+}
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+.result-overlay {
+    background-color: rgba(0,0,0,0.5);
+}
+
+#resultSymbol {
+    font-size: 18rem; /* Increased size */
+    animation: zoom-in-out 1s ease-in-out;
+    text-shadow: 8px 8px 0 #000;
+}
+@keyframes zoom-in-out {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+.bounce-in {
+    animation: bounce-in 0.5s ease-out;
+}
+@keyframes bounce-in {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.game-over-text {
+    animation: game-over-anim 1.5s infinite;
+    color: #ef4444;
+}
+@keyframes game-over-anim {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); color: #f87171; }
+}
+
+/* plant animation */
+#wateringCan.animate { animation: pour 1.5s ease-in-out; }
+@keyframes pour {
+    0% { transform: translate(-50%, -20%) rotate(0deg); }
+    30% { transform: translate(-50%, -20%) rotate(-45deg); }
+    70% { transform: translate(-50%, -20%) rotate(-45deg); }
+    100% { transform: translate(-50%, -20%) rotate(0deg); }
+}
+
+.water-drop { opacity: 0; animation: drop 1.5s linear infinite; }
+@keyframes drop {
+    30% { opacity: 0; transform: translateY(0); }
+    40% { opacity: 1; }
+    80% { opacity: 0; transform: translateY(80px); }
+    100% { opacity: 0; }
+}
+
+#plantEffect.grow { background: radial-gradient(circle, rgba(255,255,102,0.8) 0%, rgba(255,255,102,0) 70%); animation: flash 1.5s ease-out; }
+#plantEffect.wilt { background: radial-gradient(circle, rgba(139,0,0,0.7) 0%, rgba(139,0,0,0) 70%); animation: flash 1.5s ease-out; }
+@keyframes flash {
+    0% { opacity: 0; width: 0; height: 0; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0; width: 300px; height: 300px; }
+}
+
+#plantLeaves.wilt { animation: wilt-anim 1.5s ease-in-out; }
+@keyframes wilt-anim { 0%,100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+/* Heart Fall Animation */
+.heart-fall {
+    position: fixed;
+    z-index: 100;
+    animation: fall-and-fade 1s ease-in forwards;
+}
+@keyframes fall-and-fade {
+    0% { transform: translateY(0) rotate(0); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+/* Golden Heart Glint */
+.golden-heart-glint {
+    animation: glint 3s infinite ease-in-out;
+}
+@keyframes glint {
+    0%, 20%, 100% { transform: translateX(-150%) skewX(-30deg); }
+    10% { transform: translateX(150%) skewX(-30deg); }
+}
+
+
+/* explosion */
+.explosion-svg { animation: explode-anim 0.4s ease-out forwards; }
+@keyframes explode-anim {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(2); opacity: 1; }
+}
+.explosion-path { transform-origin: center; animation: explosion-path-anim 0.4s ease-out forwards; }
+@keyframes explosion-path-anim {
+    from { transform: scale(0.5); }
+    to { transform: scale(1); }
+}
+
+/* Rule Screen Animation */
+.speech-bubble {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transform: translateY(20px);
+}
+#ruleConfirmBtn {
+    transition: opacity 0.5s ease-out;
+}
+
+--- css\img\cat.svg ---
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 95 C 80 95, 85 65, 85 50 C 85 25, 65 10, 50 10 C 35 10, 15 25, 15 50 C 15 65, 20 95, 50 95 Z" fill="black"/>
+    <path d="M20 20 L35 10 L40 25 Z" fill="black"/>
+    <path d="M80 20 L65 10 L60 25 Z" fill="black"/>
+    <path d="M30 35 a 5 5 0 0 1 10 0 a 5 5 0 0 1 -10 0" fill="white"/>
+    <path d="M60 35 a 5 5 0 0 1 10 0 a 5 5 0 0 1 -10 0" fill="white"/>
+    <path d="M33 35 a 2 2 0 0 1 4 0 a 2 2 0 0 1 -4 0" fill="black"/>
+    <path d="M63 35 a 2 2 0 0 1 4 0 a 2 2 0 0 1 -4 0" fill="black"/>
+    <path d="M45 55 Q 50 65 55 55" stroke="white" stroke-width="2" fill="none"/>
+</svg>
+
+--- js\main.js ---
+// オーディオ管理クラス
+class AudioManager {
+    constructor() {
+        this.sfxContext = null; this.sfxGain = null; this.tickInterval = null;
+    }
+
+    async initSfx() {
+        if (this.sfxContext) return;
+        try {
+            this.sfxContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.sfxGain = this.sfxContext.createGain();
+            this.sfxGain.connect(this.sfxContext.destination); this.sfxGain.gain.value = 0.4;
+        } catch (e) { console.error("Web Audio API is not supported for SFX."); }
+    }
+
+    playSfx(notes, durations, type = 'sine') {
+        if (!this.sfxContext) return;
+        let time = this.sfxContext.currentTime;
+        notes.forEach((freq, i) => {
+            if (freq > 0) {
+                const osc = this.sfxContext.createOscillator(); const gain = this.sfxContext.createGain();
+                osc.connect(gain); gain.connect(this.sfxGain); osc.type = type;
+                osc.frequency.setValueAtTime(freq, time); gain.gain.setValueAtTime(0.5, time);
+                gain.gain.exponentialRampToValueAtTime(0.01, time + durations[i]);
+                osc.start(time); osc.stop(time + durations[i]);
+            }
+            time += durations[i];
+        });
+    }
+
+    playCorrectSound() { this.playSfx([783.99, 1046.50], [0.1, 0.4]); }
+    playIncorrectSound() { this.playSfx([293.66, 261.63, 233.08, 207.65], [0.1, 0.1, 0.1, 0.4], 'sawtooth'); }
+    playCountdownSound(isStart = false) { this.playSfx([isStart ? 880 : 440], [0.3]); }
+    playGameOverSound() { this.playSfx([130, 110, 98], [0.4, 0.4, 1.0], 'sawtooth'); }
+
+    // 時計のチクタク音を再生
+    playTickSound() {
+        if (!this.sfxContext) return;
+        const time = this.sfxContext.currentTime;
+        const osc = this.sfxContext.createOscillator();
+        const gain = this.sfxContext.createGain();
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1200, time);
+        gain.gain.setValueAtTime(0.1, time); // 小さめの音量
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+        osc.start(time);
+        osc.stop(time + 0.05);
+    }
+
+    playTransitionBGM(callback) {
+        if (!this.sfxContext) {
+            setTimeout(callback, 4000); // オーディオが使えない場合は4秒待って次に進む
+            return;
+        }
+        const BPM = 150; const eighthNoteTime = 60 / BPM / 2;
+        const melody = [{ f: 523, d: 2 }, { f: 587, d: 2 }, { f: 659, d: 2 }, { f: 587, d: 2 }, { f: 659, d: 2 }, { f: 783, d: 2 }, { f: 659, d: 2 }, { f: 587, d: 2 }, { f: 523, d: 2 }, { f: 440, d: 2 }, { f: 523, d: 4 }];
+        const bass = [{ f: 261, d: 4 }, { f: 329, d: 4 }, { f: 392, d: 4 }, { f: 220, d: 4 }];
+        const time = this.sfxContext.currentTime; let currentTime = time;
+        melody.forEach(note => {
+            const osc = this.sfxContext.createOscillator(); const gain = this.sfxContext.createGain(); osc.connect(gain); gain.connect(this.sfxGain); osc.type = 'square';
+            gain.gain.setValueAtTime(0.15, currentTime); osc.frequency.setValueAtTime(note.f, currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, currentTime + note.d * eighthNoteTime * 0.9);
+            osc.start(currentTime); osc.stop(currentTime + note.d * eighthNoteTime); currentTime += note.d * eighthNoteTime;
+        });
+        currentTime = time;
+        bass.forEach(note => {
+            const osc = this.sfxContext.createOscillator(); const gain = this.sfxContext.createGain(); osc.connect(gain); gain.connect(this.sfxGain); osc.type = 'sawtooth';
+            gain.gain.setValueAtTime(0.2, currentTime); osc.frequency.setValueAtTime(note.f, currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, currentTime + note.d * eighthNoteTime * 0.9);
+            osc.start(currentTime); osc.stop(currentTime + note.d * eighthNoteTime); currentTime += note.d * eighthNoteTime;
+        });
+        setTimeout(callback, 4000);
+    }
+}
+
+// ゲーム本体クラス
+class GeographyGame {
+    constructor() {
+        this.score = 0; this.currentQuestionIndex = 0;
+        this.lives = 4; this.plantGrowth = 0;
+        this.audioManager = new AudioManager();
+        this.questions = []; // ★変更点：最初は空の配列にしておく
+    }
+
+    // ★追加点：JSONファイルを読み込んでゲーム全体を初期化するメソッド
+    async init() {
+        await this.loadQuestions(); // 問題を非同期で読み込む
+        if (this.questions.length === 0) return; // 問題がなければ終了
+
+        this.shuffleArray(this.questions);
+        this.bindEvents();
+        this.showStartScreen();
+        // 植木鉢の初期描画
+        const pot = document.getElementById('plantPot');
+        const leaves = document.getElementById('plantLeaves');
+        pot.innerHTML = `<g transform="translate(25, 0)"><path fill="#000" d="M33 148 H67 V149 H68 V150 H69 V171 H68 V172 H65 V173 H35 V172 H32 V171 H31 V150 H32 V149 H33 V148"/><path fill="#d97706" d="M34 149 H66 V150 H34 V149 M33 150 H32 V171 H33 V150 M67 150 H68 V171 H67 V150 M35 172 H65 V171 H35 V172"/><path fill="#f59e0b" d="M34 150 H66 V171 H34 V150"/></g>`;
+        leaves.innerHTML = this.getLeafSvg(0);
+    }
+
+    // ★追加点：questions.jsonを非同期で読み込むメソッド
+    async loadQuestions() {
+        try {
+            const response = await fetch('questions.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            this.questions = await response.json();
+        } catch (error) {
+            console.error("問題ファイルの読み込みに失敗しました:", error);
+            document.body.innerHTML = '<div style="color: white; text-align: center; padding: 50px; font-size: 1.2rem;">エラー: 問題ファイル(questions.json)を読み込めませんでした。<br>ファイルが正しい場所にあるか確認してください。</div>';
+        }
+    }
+
+    // 配列をシャッフルする（Fisher-Yatesアルゴリズム）
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // (init()メソッドは上記でasync付きのものに置き換え済み)
+
+    showStartScreen() {
+        const startButton = document.getElementById('startButton');
+        const countdownDisplay = document.getElementById('countdownDisplay');
+
+        startButton.style.display = 'inline-block';
+        countdownDisplay.textContent = '';
+    }
+
+    startCountdown() {
+        const countdownDisplay = document.getElementById('countdownDisplay');
+        let count = 3;
+        const countdownInterval = setInterval(() => {
+            if (count > 0) {
+                countdownDisplay.textContent = count;
+                this.audioManager.playCountdownSound();
+                count--;
+            } else {
+                clearInterval(countdownInterval);
+                countdownDisplay.textContent = 'スタート！';
+                this.audioManager.playCountdownSound(true);
+                setTimeout(() => {
+                    document.getElementById('startScreen').classList.add('hidden');
+                    this.showRuleScreen();
+                }, 1000);
+            }
+        }, 1000);
+    }
+
+    showRuleScreen() {
+        const ruleScreen = document.getElementById('ruleScreen');
+        ruleScreen.classList.remove('hidden');
+
+        const bubbles = document.querySelectorAll('#speechBubbles .speech-bubble');
+        const button = document.getElementById('ruleConfirmBtn');
+
+        bubbles.forEach((bubble, index) => {
+            setTimeout(() => {
+                bubble.style.opacity = '1';
+                bubble.style.transform = 'translateY(0)';
+            }, index * 1200);
+        });
+
+        setTimeout(() => {
+            button.style.opacity = '1';
+        }, bubbles.length * 1200);
+    }
+
+    transitionToNextQuestion(isCorrect) {
+        const lifeScreen = document.getElementById('lifeScreen');
+        lifeScreen.classList.remove('hidden');
+
+        this.updateLivesDisplay();
+        this.updatePlant(isCorrect); // 正解したかどうかを渡して植物の状態を更新
+
+        const nextQuestionDisplay = document.getElementById('nextQuestionDisplay');
+        nextQuestionDisplay.textContent = `NEXT ${String(this.currentQuestionIndex + 1).padStart(2, '0')}`;
+
+        this.audioManager.playTransitionBGM(() => {
+            lifeScreen.classList.add('hidden');
+            this.showGameScreen();
+        });
+    }
+
+    // ライフ（ハート）を表示/更新
+    updateLivesDisplay(animateLoss = false) {
+        const livesContainer = document.getElementById('livesContainer');
+        const hearts = livesContainer.children;
+
+        if (animateLoss && this.lives < 4 && hearts.length > 0) {
+            const heartToLose = hearts[this.lives];
+            if (heartToLose) {
+                const heartRect = heartToLose.getBoundingClientRect();
+                const fallingHeart = heartToLose.cloneNode(true);
+                fallingHeart.classList.add('heart-fall');
+                fallingHeart.style.left = `${heartRect.left}px`;
+                fallingHeart.style.top = `${heartRect.top}px`;
+                document.body.appendChild(fallingHeart);
+                setTimeout(() => fallingHeart.remove(), 1000);
+            }
+        }
+
+        livesContainer.innerHTML = '';
+        for (let i = 0; i < 4; i++) {
+            const heart = document.createElement('div');
+            const isLost = i >= this.lives;
+            const heartSVG = `
+            <svg width="80" height="80" viewBox="0 0 32 32">
+                <defs>
+                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFDF00;" />
+                        <stop offset="100%" style="stop-color:#B8860B;" />
+                    </linearGradient>
+                    <clipPath id="heart-clip-path"><path d="M16 28.7c-5.4-4.8-12-8.5-12-14.2 0-3.6 2.2-6.5 6-6.5 3.3 0 6 2.7 6 2.7s2.7-2.7 6-2.7c3.8 0 6 2.9 6 6.5 0 5.7-6.6 9.4-12 14.2z"/></clipPath>
+                </defs>
+                <path fill="${isLost ? '#1F2937' : 'url(#goldGradient)'}" stroke="#422c09" stroke-width="1.5" d="M16 28.7c-5.4-4.8-12-8.5-12-14.2 0-3.6 2.2-6.5 6-6.5 3.3 0 6 2.7 6 2.7s2.7-2.7 6-2.7c3.8 0 6 2.9 6 6.5 0 5.7-6.6 9.4-12 14.2z"/>
+                ${!isLost ? `<g clip-path="url(#heart-clip-path)"><rect class="golden-heart-glint" x="-32" y="0" width="16" height="32" fill="rgba(255, 255, 255, 0.5)"/></g>` : ''}
+            </svg>`;
+            heart.innerHTML = heartSVG;
+            livesContainer.appendChild(heart);
+        }
+    }
+
+    // 植物の成長アニメーションや状態変化を管理
+    updatePlant(wasCorrect) {
+        const wateringCan = document.getElementById('wateringCan');
+        const plantEffect = document.getElementById('plantEffect');
+        const plantLeaves = document.getElementById('plantLeaves');
+
+        plantEffect.className = 'absolute hidden rounded-full opacity-0 z-0';
+
+        if (wasCorrect) { // 正解した場合
+            wateringCan.classList.remove('hidden'); wateringCan.classList.add('animate'); // じょうろアニメーション
+            plantEffect.classList.add('grow');
+            plantEffect.classList.remove('hidden');
+
+            setTimeout(() => this.growPlant(), 1000); // 1秒後に成長処理
+            setTimeout(() => {
+                wateringCan.classList.add('hidden');
+                wateringCan.classList.remove('animate');
+            }, 1500);
+        } else { // 不正解または初回表示
+            this.growPlant(false);
+            if (this.currentQuestionIndex > 0) { // 初回以外で不正解なら萎れる
+                plantLeaves.classList.add('wilt');
+                plantEffect.classList.add('wilt'); plantEffect.classList.remove('hidden');
+                setTimeout(() => plantLeaves.classList.remove('wilt'), 1500);
+            }
+        }
+    }
+
+    getLeafSvg(yOffset) {
+        const baseY = 150;
+        return `
+            <g transform="translate(0, ${-yOffset})">
+                <path d="M73 ${baseY - yOffset - 5} q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#000"/>
+                <path d="M72 ${baseY - yOffset - 6} q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#22C55E"/>
+                <path d="M72 ${baseY - yOffset - 6} q -10 -5 -15 -15" stroke="#166534" stroke-width="1.5" fill="none"/>
+                <path d="M77 ${baseY - yOffset - 5} q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#000"/>
+                <path d="M78 ${baseY - yOffset - 6} q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#22C55E"/>
+                <path d="M78 ${baseY - yOffset - 6} q 10 -5 15 -15" stroke="#166534" stroke-width="1.5" fill="none"/>
+            </g>
+        `;
+    }
+
+    // 植物を成長させる処理
+    growPlant(shouldGrow = true) {
+        if (shouldGrow) this.plantGrowth++;
+
+        const plantGroup = document.getElementById('plantGroup');
+        const stem = document.getElementById('plantStem');
+        const leaves = document.getElementById('plantLeaves');
+        const flowersContainer = document.getElementById('flowersContainer');
+
+        const growthAmount = 25; const newHeight = this.plantGrowth * growthAmount;
+        const baseY = 150;
+
+        stem.setAttribute('height', newHeight);
+        stem.setAttribute('y', baseY - newHeight);
+
+        leaves.innerHTML = this.getLeafSvg(newHeight);
+
+        if (shouldGrow && this.plantGrowth > 0 && this.plantGrowth % 5 === 0) {
+            const flowerY = baseY - (newHeight - growthAmount);
+            const flowerX = 75 + (this.plantGrowth % 10 === 0 ? -20 : 20);
+            const flower = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            flower.innerHTML = `
+                <path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/>
+                <path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/>
+                <rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/>
+                <rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/>
+                <rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/>
+            `;
+            flowersContainer.appendChild(flower);
+        }
+
+        plantGroup.setAttribute('transform', `translate(0, ${newHeight > 50 ? (newHeight - 50) : 0})`);
+    }
+
+    showGameScreen() {
+        document.getElementById('gameScreen').classList.remove('hidden');
+        this.showQuestion(); this.startTimer();
+    }
+
+    bindEvents() {
+        document.getElementById('startButton').onclick = async () => {
+            await this.audioManager.initSfx();
+            document.getElementById('startButton').style.display = 'none';
+            this.startCountdown();
+        };
+        document.getElementById('restartBtn').addEventListener('click', () => window.location.reload());
+
+        document.querySelectorAll('.choice-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.selectAnswer(e));
+        });
+
+        document.getElementById('ruleConfirmBtn').onclick = () => {
+            document.getElementById('ruleScreen').classList.add('hidden');
+            this.transitionToNextQuestion(false);
+        };
+    }
+
+    showQuestion() {
+        const question = this.questions[this.currentQuestionIndex];
+        document.getElementById('questionText').textContent = question.title;
+
+        const contentDiv = document.getElementById('questionContent');
+        if (question.type === 'climate') {
+            contentDiv.innerHTML = this.generateClimateChart(question.content.split('-')[1]);
+        } else {
+            contentDiv.innerHTML = `<img src="${question.content}" alt="問題画像" class="mx-auto pixel-border" style="width: 300px; height: 220px; object-fit: contain; background: #9376F0;">`;
+        }
+
+        const choiceBtns = document.querySelectorAll('.choice-btn');
+        const colors = ['bg-red-500', 'bg-blue-500', 'bg-yellow-500', 'bg-green-500'];
+        const textColors = ['text-white', 'text-white', 'text-black', 'text-white'];
+
+        choiceBtns.forEach((btn, index) => {
+            btn.textContent = question.choices[index];
+            btn.className = 'choice-btn pixel-button py-4 px-4 text-lg';
+            btn.classList.add(colors[index], textColors[index]); btn.disabled = false;
+            btn.style.cssText = ''; // Clear inline styles
+        });
+    }
+
+    generateClimateChart(type) { const charts = { 'af': { temp: [180, 175, 170, 175, 180, 185, 190, 195, 190, 185, 180, 175], precip: [90, 85, 95, 100, 95, 90, 85, 80, 85, 90, 95, 90] }, 'aw': { temp: [170, 165, 160, 165, 170, 175, 180, 185, 180, 175, 170, 165], precip: [20, 15, 10, 5, 30, 80, 100, 95, 85, 60, 40, 25] }, 'bwh': { temp: [150, 140, 120, 100, 80, 70, 75, 85, 105, 125, 145, 155], precip: [5, 3, 2, 1, 1, 0, 0, 1, 2, 3, 4, 5] }, 'csa': { temp: [160, 150, 130, 110, 90, 75, 70, 75, 95, 115, 135, 155], precip: [80, 70, 60, 40, 20, 5, 2, 5, 25, 50, 70, 85] }, 'cfb': { temp: [170, 155, 140, 120, 100, 85, 80, 85, 105, 125, 145, 165], precip: [70, 65, 60, 55, 50, 45, 40, 45, 55, 65, 70, 75] } }; const data = charts[type]; let svg = `<svg width="300" height="220" class="mx-auto pixel-border" style="background: #9376F0;"><rect width="300" height="220" fill="#4A249D"/><rect x="30" y="180" width="240" height="3" fill="#F9E076"/><rect x="30" y="30" width="3" height="153" fill="#F9E076"/><text x="50" y="200" text-anchor="middle" class="text-xs fill-white" style="font-family: 'RocknRoll One';">1</text><text x="150" y="200" text-anchor="middle" class="text-xs fill-white" style="font-family: 'RocknRoll One';">6</text><text x="250" y="200" text-anchor="middle" class="text-xs fill-white" style="font-family: 'RocknRoll One';">12</text>`; for (let i = 0; i < 11; i++) { svg += `<rect x="${45 + i * 20}" y="${180 - (data.temp[i] - 50)}" width="8" height="8" fill="#F87171"/>`; } for (let i = 0; i < 11; i++) { svg += `<rect x="${42 + i * 20}" y="${180 - data.precip[i] / 2}" width="12" height="${data.precip[i] / 2}" fill="#60A5FA"/>`; } svg += `<rect x="40" y="15" width="12" height="3" fill="#F87171"/><text x="55" y="22" class="text-xs fill-white" style="font-family: 'RocknRoll One';">気温</text><rect x="120" y="15" width="8" height="8" fill="#60A5FA"/><text x="132" y="22" class="text-xs fill-white" style="font-family: 'RocknRoll One';">降水量</text></svg>`; return svg; }
+
+    selectAnswer(e) {
+        if (e.target.disabled) return;
+
+        const isCorrect = parseInt(e.target.dataset.answer) === this.questions[this.currentQuestionIndex].correct;
+        clearInterval(this.timer);
+        document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
+
+        if (isCorrect) {
+            this.audioManager.playCorrectSound();
+            e.target.style.background = '#22c55e';
+            e.target.style.backgroundImage = 'none'; this.score++;
+            this.showResultSymbol('○', '#f87171');
+        } else {
+            this.audioManager.playIncorrectSound(); e.target.classList.add('shake');
+            e.target.style.background = '#ef4444';
+            e.target.style.backgroundImage = 'none';
+            this.updateLivesDisplay(true);
+            this.lives--;
+            const correctBtn = document.querySelectorAll('.choice-btn')[this.questions[this.currentQuestionIndex].correct];
+            correctBtn.style.background = '#22c55e';
+            correctBtn.style.backgroundImage = 'none';
+            this.showResultSymbol('×', '#60a5fa');
+        }
+
+        setTimeout(() => { this.nextStep(isCorrect); }, 1500);
+    }
+
+    showResultSymbol(symbol, color) {
+        const overlay = document.getElementById('resultOverlay'); const symbolElement = document.getElementById('resultSymbol');
+        symbolElement.textContent = symbol; symbolElement.style.color = color;
+        overlay.classList.remove('hidden');
+        setTimeout(() => { overlay.classList.add('hidden'); }, 1000);
+    }
+
+    startTimer() {
+        this.timeLeft = 10;
+        const timerBar = document.getElementById('timerBar'); const spark = document.getElementById('spark');
+        const fuseContainer = document.getElementById('fuseContainer');
+        timerBar.style.width = '100%';
+        spark.style.left = `calc(100% - 12px)`;
+
+        this.timer = setInterval(() => {
+            this.timeLeft--;
+            this.audioManager.playTickSound();
+            const percentage = Math.max(0, this.timeLeft / 10);
+            timerBar.style.width = `${percentage * 100}%`;
+            spark.style.left = `calc(${percentage * 100}% - 12px)`;
+            if (this.timeLeft <= 0) { clearInterval(this.timer); this.timeUp(); }
+        }, 1000);
+    }
+
+    timeUp() {
+        this.animateExplosion();
+        document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
+        this.updateLivesDisplay(true);
+        this.lives--;
+        this.audioManager.playIncorrectSound();
+        this.showResultSymbol('×', '#60a5fa');
+        setTimeout(() => { this.nextStep(false); }, 1500);
+    }
+
+    animateExplosion() {
+        const explosionEffect = document.getElementById('explosionEffect');
+        explosionEffect.classList.remove('hidden');
+        setTimeout(() => { explosionEffect.classList.add('hidden'); }, 400);
+    }
+
+    nextStep(isCorrect) {
+        document.getElementById('gameScreen').classList.add('hidden');
+        this.currentQuestionIndex++;
+        if (this.currentQuestionIndex >= this.questions.length || this.lives <= 0) {
+            this.showResult();
+        } else {
+            this.transitionToNextQuestion(isCorrect);
+        }
+    }
+
+    // 最終結果を表示
+    showResult() {
+        document.getElementById('resultScreen').classList.remove('hidden');
+        const resultTitleEl = document.getElementById('resultTitle');
+        const resultMessageEl = document.getElementById('resultMessage');
+        const plantMeasure = document.getElementById('plantMeasure');
+        const plantHeightText = document.getElementById('plantHeightText');
+        const finalPlantSvg = document.getElementById('finalPlantSvg');
+
+        if (this.lives <= 0) {
+            this.audioManager.playGameOverSound();
+            resultTitleEl.innerHTML = '<div class="game-over-text">ゲームオーバー！</div>';
+            resultMessageEl.textContent = 'またチャレンジしてね！';
+        } else {
+            resultTitleEl.textContent = 'ゲームクリア！';
+            resultMessageEl.textContent = 'すごい！よくできました！';
+        }
+
+        const plantHeightCm = this.plantGrowth * 10;
+        const totalSvgHeight = this.plantGrowth * 25 + 100;
+        finalPlantSvg.setAttribute('viewBox', `0 0 100 ${totalSvgHeight}`);
+
+        let flowersHtml = '';
+        for (let i = 1; i <= this.plantGrowth; i++) {
+            if (i > 0 && i % 5 === 0) {
+                const flowerY = 150 - (i * 25 - 25);
+                const flowerX = 50 + (i % 10 === 0 ? -15 : 15);
+                flowersHtml += `<g><path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/><path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/><rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/><rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/></g>`;
+            }
+        }
+
+        finalPlantSvg.innerHTML = `
+             <g transform="translate(0, ${totalSvgHeight - 200})">
+                 ${flowersHtml}
+                 <rect id="plantStem" x="48" y="${150 - this.plantGrowth * 25}" width="4" height="${this.plantGrowth * 25}" fill="#22C55E" stroke="#166534" stroke-width="1"/>
+                 ${this.getLeafSvg(this.plantGrowth * 25).replace('<g transform="translate(0,', '<g transform="translate(-25,')}
+                 <g>
+                     <path fill="#000" d="M33 148 H67 V149 H68 V150 H69 V171 H68 V172 H65 V173 H35 V172 H32 V171 H31 V150 H32 V149 H33 V148"/>
+                     <path fill="#d97706" d="M34 149 H66 V150 H34 V149 M33 150 H32 V171 H33 V150 M67 150 H68 V171 H67 V150 M35 172 H65 V171 H35 V172"/>
+                     <path fill="#f59e0b" d="M34 150 H66 V171 H34 V150"/>
+                 </g>
+            </g>
+        `;
+
+        plantMeasure.innerHTML = '';
+        if (plantHeightCm > 0) {
+            const step = Math.max(10, Math.ceil(plantHeightCm / 100) * 10);
+            for (let i = 0; i <= plantHeightCm; i += step) {
+                plantMeasure.innerHTML += `<div class="absolute w-full border-t border-dashed border-gray-400" style="bottom: ${i / plantHeightCm * 100}%;"><span class="absolute right-full text-xs text-white -mr-1 -translate-y-1/2 pr-1">${i}</span></div>`;
+            }
+        }
+        plantHeightText.textContent = `${plantHeightCm}cm`;
+    }
+}
+
+// ★変更点：DOMContentLoadedのイベントリスナー内で、非同期のinitメソッドを呼び出すように変更
+window.addEventListener('DOMContentLoaded', () => {
+    const game = new GeographyGame();
+    game.init();
+});
+

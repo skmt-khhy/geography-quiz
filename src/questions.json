@@ -1,0 +1,326 @@
+[
+    {
+        "title": "「鉄は国家なり」のスローガンで発展した福岡県の工業都市は？",
+        "content": "img/steel.svg",
+        "choices": [
+            "福岡市",
+            "北九州市",
+            "大牟田市",
+            "久留米市"
+        ],
+        "correct": 1
+    },
+    {
+        "title": "自動車産業が特に盛んで「クルマのまち」として知られる愛知県の都市は？",
+        "content": "img/car.svg",
+        "choices": [
+            "名古屋市",
+            "豊橋市",
+            "豊田市",
+            "岡崎市"
+        ],
+        "correct": 2
+    },
+    {
+        "title": "石油化学コンビナートが広がる三重県の工業都市は？",
+        "content": "img/oil.svg",
+        "choices": [
+            "津市",
+            "四日市市",
+            "伊勢市",
+            "鈴鹿市"
+        ],
+        "correct": 1
+    },
+    {
+        "title": "東京湾岸に広がる日本最大の工業地帯の名前は？",
+        "content": "img/factory.svg",
+        "choices": [
+            "阪神工業地帯",
+            "中京工業地帯",
+            "京浜工業地帯",
+            "瀬戸内工業地域"
+        ],
+        "correct": 2
+    },
+    {
+        "title": "大阪府堺市などで大規模なコンビナートが見られる工業地帯は？",
+        "content": "img/factory_night.svg",
+        "choices": [
+            "阪神工業地帯",
+            "北陸工業地域",
+            "東海工業地域",
+            "関東内陸工業地域"
+        ],
+        "correct": 0
+    },
+    {
+        "title": "静岡県に広がり、楽器やオートバイの生産で有名な工業地域は？",
+        "content": "img/piano.svg",
+        "choices": [
+            "京葉工業地域",
+            "東海工業地域",
+            "中央高地工業地域",
+            "北関東工業地域"
+        ],
+        "correct": 1
+    },
+    {
+        "title": "IC（集積回路）の生産が盛んで「シリコンアイランド」と呼ばれる九州地方にある空港はどこ？",
+        "content": "img/ic.svg",
+        "choices": [
+            "福岡空港",
+            "長崎空港",
+            "鹿児島空港",
+            "熊本空港"
+        ],
+        "correct": 3
+    },
+    {
+        "title": "ドイツで鉄鋼・石炭業で栄え、現在は先端技術産業へ転換した工業地域は？",
+        "content": "img/coal.svg",
+        "choices": [
+            "ルール工業地域",
+            "ザール工業地域",
+            "中部ドイツ工業地域",
+            "北部ドイツ工業地域"
+        ],
+        "correct": 0
+    },
+    {
+        "title": "フランス南部にあり、航空機産業の中心地として知られる都市は？",
+        "content": "img/plane.svg",
+        "choices": [
+            "パリ",
+            "マルセイユ",
+            "リヨン",
+            "トゥールーズ"
+        ],
+        "correct": 3
+    },
+    {
+        "title": "イタリア北部でミラノ、トリノ、ジェノバを結ぶ工業が盛んな地域を何と呼ぶ？",
+        "content": "img/gear.svg",
+        "choices": [
+            "第三のイタリア",
+            "工業の三角地帯",
+            "メッツォジョールノ",
+            "フランダース地方"
+        ],
+        "correct": 1
+    },
+    {
+        "title": "イギリスの産業革命で綿工業の中心地として発展した都市は？",
+        "content": "img/textile.svg",
+        "choices": [
+            "ロンドン",
+            "リヴァプール",
+            "マンチェスター",
+            "バーミンガム"
+        ],
+        "correct": 2
+    },
+    {
+        "title": "オランダにあり、ヨーロッパ最大の貿易港として知られるのは？",
+        "content": "img/ship.svg",
+        "choices": [
+            "アムステルダム",
+            "ロッテルダム",
+            "ハーグ",
+            "ユトレヒト"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "climate",
+        "title": "この雨温図の気候区分は？",
+        "content": "climate-af",
+        "choices": [
+            "Af(熱帯雨林)",
+            "Aw(サバナ)",
+            "Cfa(温暖湿潤)",
+            "Cfb(西岸海洋性)"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "climate",
+        "title": "この雨温図の気候区分は？",
+        "content": "climate-aw",
+        "choices": [
+            "Af(熱帯雨林)",
+            "Aw(サバナ)",
+            "BSh(ステップ)",
+            "BWh(砂漠)"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "climate",
+        "title": "この雨温図の気候区分は？",
+        "content": "climate-bwh",
+        "choices": [
+            "BWh(砂漠)",
+            "BSh(ステップ)",
+            "Csa(地中海性)",
+            "Cwb(高原)"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "climate",
+        "title": "この雨温図の気候区分は？",
+        "content": "climate-csa",
+        "choices": [
+            "Cfa(温暖湿潤)",
+            "Cfb(西岸海洋性)",
+            "Csa(地中海性)",
+            "Dfa(大陸性湿潤)"
+        ],
+        "correct": 2
+    },
+    {
+        "type": "climate",
+        "title": "この雨温図の気候区分は？",
+        "content": "climate-cfb",
+        "choices": [
+            "Cfb(西岸海洋性)",
+            "Cfa(温暖湿潤)",
+            "Dfb(大陸性湿潤)",
+            "ET(ツンドラ)"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "mountain",
+        "title": "世界で一番高い山は？",
+        "content": "img/mountain.svg",
+        "choices": [
+            "K2",
+            "エベレスト",
+            "カンチェンジュンガ",
+            "マカル"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "river",
+        "title": "世界で一番長い川は？",
+        "content": "img/river.svg",
+        "choices": [
+            "ナイル川",
+            "アマゾン川",
+            "長江",
+            "ミシシッピ川"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "desert",
+        "title": "世界で一番大きい砂漠は？",
+        "content": "img/desert.svg",
+        "choices": [
+            "サハラ砂漠",
+            "ゴビ砂漠",
+            "カラハリ砂漠",
+            "アタカマ砂漠"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "ocean",
+        "title": "世界で一番大きい海は？",
+        "content": "img/ocean.svg",
+        "choices": [
+            "太平洋",
+            "大西洋",
+            "インド洋",
+            "北極海"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "capital",
+        "title": "スイスの首都は？",
+        "content": "img/city.svg",
+        "choices": [
+            "チューリッヒ",
+            "ベルン",
+            "ジュネーヴ",
+            "バーゼル"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "capital",
+        "title": "オーストラリアの首都は？",
+        "content": "img/city.svg",
+        "choices": [
+            "シドニー",
+            "メルボルン",
+            "キャンベラ",
+            "パース"
+        ],
+        "correct": 2
+    },
+    {
+        "type": "country",
+        "title": "世界で一番大きい国は？",
+        "content": "img/world.svg",
+        "choices": [
+            "カナダ",
+            "ロシア",
+            "アメリカ",
+            "中国"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "island",
+        "title": "世界で一番大きい島は？",
+        "content": "img/island.svg",
+        "choices": [
+            "グリーンランド",
+            "ニューギニア島",
+            "ボルネオ島",
+            "マダガスカル島"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "agriculture",
+        "title": "世界最大の小麦生産国は？",
+        "content": "img/wheat.svg",
+        "choices": [
+            "アメリカ",
+            "中国",
+            "インド",
+            "ロシア"
+        ],
+        "correct": 1
+    },
+    {
+        "type": "agriculture",
+        "title": "世界最大の米生産国は？",
+        "content": "img/rice.svg",
+        "choices": [
+            "中国",
+            "インド",
+            "インドネシア",
+            "バングラデシュ"
+        ],
+        "correct": 0
+    },
+    {
+        "type": "resource",
+        "title": "世界最大の石油埋蔵国は？",
+        "content": "img/oil_field.svg",
+        "choices": [
+            "サウジアラビア",
+            "ベネズエラ",
+            "カナダ",
+            "イラン"
+        ],
+        "correct": 1
+    }
+]
