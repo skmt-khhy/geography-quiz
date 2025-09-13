@@ -420,6 +420,11 @@ class GeographyGame {
     }
 
     showResult() {
+        // ★★★★★ 修正ここから ★★★★★
+        // 表示のズレを防ぐため、結果表示の直前にスコアと成長度を強制的に同期させる
+        this.plantGrowth = this.score;
+        // ★★★★★ 修正ここまで ★★★★★
+
         document.getElementById('resultScreen').classList.remove('hidden');
         const resultTitleEl = document.getElementById('resultTitle');
         const resultMessageEl = document.getElementById('resultMessage');

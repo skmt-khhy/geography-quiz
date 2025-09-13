@@ -158,18 +158,26 @@
     </div>
 
     <div id="resultScreen" class="hidden min-h-screen flex flex-col items-center justify-center p-8">
-        <div class="pixel-card p-8 text-center max-w-2xl w-full bounce-in">
+        <div class="pixel-card p-8 text-center max-w-4xl w-full bounce-in">
             <div id="resultTitle" class="text-4xl mb-4 text-amber-300 font-bold pixel-text"></div>
-            <div id="finalPlantContainer" class="w-full flex justify-center items-end my-4">
-                <div class="relative flex items-end h-full">
-                    <svg id="finalPlantSvg" viewBox="0 0 100 100" class="h-full w-auto"></svg>
-                    <div id="plantMeasure" class="h-full w-4 bg-gray-700 ml-4 relative"></div>
-                    <div id="plantHeightText"
-                        class="absolute text-xl font-bold text-white pixel-text -right-24 bottom-1/2 translate-y-1/2">
+
+            <div class="flex justify-center items-end">
+
+                <div id="finalPlantContainer" class="flex justify-center items-end my-4">
+                    <div class="relative flex items-end h-full">
+                        <svg id="finalPlantSvg" viewBox="0 0 100 100" class="h-full w-auto"></svg>
+                        <div id="plantMeasure" class="h-full w-4 bg-gray-700 ml-4 relative"></div>
+                        <div id="plantHeightText"
+                            class="absolute text-xl font-bold text-white pixel-text -right-24 bottom-1/2 translate-y-1/2">
+                        </div>
                     </div>
                 </div>
-            </div>
 
+                <div class="pl-8 pb-4">
+                    <button id="restartBtn" class="pixel-button py-4 px-8 text-xl whitespace-nowrap"></button>
+                </div>
+
+            </div>
             <div class="flex items-center justify-center mt-6 min-h-[8rem]">
                 <img src="img/cat.svg" alt="黒猫" class="w-24 h-24 flex-shrink-0">
                 <div id="resultMessageContainer" class="relative ml-4">
@@ -177,7 +185,6 @@
                     </div>
                 </div>
             </div>
-            <button id="restartBtn" class="pixel-button py-4 px-8 text-xl mt-6">もう一度！</button>
         </div>
     </div>
     <div id="endingScreen" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
