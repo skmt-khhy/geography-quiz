@@ -472,8 +472,10 @@ class GeographyGame {
             }
         }
 
-        // SVGの下端が揃うように、植物全体を上に移動
-        const yTranslate = totalSvgHeight - 200;
+        // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+        // 修正点: 植木鉢の底の座標(173)を基準にY方向の移動量を計算
+        const yTranslate = totalSvgHeight - 173;
+        // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 
         finalPlantSvg.innerHTML = `
             <g transform="translate(0, ${yTranslate})">
