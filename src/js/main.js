@@ -253,17 +253,16 @@ class GeographyGame {
         }
     }
 
-    getLeafSvg(yOffset) {
+    getLeafSvg() {
         const baseY = 150;
+        // 葉の座標を固定値で描画（Yオフセット計算を削除）
         return `
-            <g transform="translate(0, ${-yOffset})">
-                <path d="M73 ${baseY - yOffset - 5} q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#000"/>
-                <path d="M72 ${baseY - yOffset - 6} q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#22C55E"/>
-                <path d="M72 ${baseY - yOffset - 6} q -10 -5 -15 -15" stroke="#166534" stroke-width="1.5" fill="none"/>
-                <path d="M77 ${baseY - yOffset - 5} q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#000"/>
-                <path d="M78 ${baseY - yOffset - 6} q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#22C55E"/>
-                <path d="M78 ${baseY - yOffset - 6} q 10 -5 15 -15" stroke="#166534" stroke-width="1.5" fill="none"/>
-            </g>
+            <path d="M73 ${baseY - 5} q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#000"/>
+            <path d="M72 ${baseY - 6} q -15 -5 -25 -20 q -5 -10 0 -15 q 5 5 15 10 q 15 10 10 25 Z" fill="#22C55E"/>
+            <path d="M72 ${baseY - 6} q -10 -5 -15 -15" stroke="#166534" stroke-width="1.5" fill="none"/>
+            <path d="M77 ${baseY - 5} q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#000"/>
+            <path d="M78 ${baseY - 6} q 15 -5 25 -20 q 5 -10 0 -15 q -5 5 -15 10 q -15 10 -10 25 Z" fill="#22C55E"/>
+            <path d="M78 ${baseY - 6} q 10 -5 15 -15" stroke="#166534" stroke-width="1.5" fill="none"/>
         `;
     }
 
@@ -276,16 +275,29 @@ class GeographyGame {
         const leaves = document.getElementById('plantLeaves');
         const flowersContainer = document.getElementById('flowersContainer');
 
-        const growthAmount = 25; const newHeight = this.plantGrowth * growthAmount;
+        const growthAmount = 25;
+        const newHeight = this.plantGrowth * growthAmount;
         const baseY = 150;
 
+        // CSS Transitionを追加してアニメーションを滑らかにする
+        stem.style.transition = 'height 0.5s ease-out, y 0.5s ease-out';
+        leaves.style.transition = 'transform 0.5s ease-out';
+
+        // 茎の高さとY座標を更新
         stem.setAttribute('height', newHeight);
         stem.setAttribute('y', baseY - newHeight);
 
-        leaves.innerHTML = this.getLeafSvg(newHeight);
+        // 葉のSVGは初回のみ描画
+        if (leaves.innerHTML === '') {
+            leaves.innerHTML = this.getLeafSvg();
+        }
 
+        // 葉のコンテナを茎の成長分だけ上に移動させる
+        leaves.setAttribute('transform', `translate(0, ${-newHeight})`);
+
+        // 花を追加するロジック (花のコンテナ自体は動かさない)
         if (shouldGrow && this.plantGrowth > 0 && this.plantGrowth % 5 === 0) {
-            const flowerY = baseY - (newHeight - growthAmount);
+            const flowerY = baseY - (newHeight - growthAmount); // 花が咲く絶対Y座標
             const flowerX = 75 + (this.plantGrowth % 10 === 0 ? -20 : 20);
             const flower = document.createElementNS("http://www.w3.org/2000/svg", "g");
             flower.innerHTML = `
@@ -298,7 +310,8 @@ class GeographyGame {
             flowersContainer.appendChild(flower);
         }
 
-        plantGroup.setAttribute('transform', `translate(0, ${newHeight > 50 ? (newHeight - 50) : 0})`);
+        // plantGroup全体のtransformは不要なため削除
+        plantGroup.removeAttribute('transform');
     }
 
     showGameScreen() {
@@ -445,28 +458,37 @@ class GeographyGame {
         }
 
         const plantHeightCm = this.plantGrowth * 10;
-        const totalSvgHeight = this.plantGrowth * 25 + 100;
-        finalPlantSvg.setAttribute('viewBox', `0 0 100 ${totalSvgHeight}`);
+        const growthHeight = this.plantGrowth * 25;
+        // SVG全体の高さを、植物の成長に合わせて動的に変更
+        const totalSvgHeight = Math.max(200, growthHeight + 75);
+        finalPlantSvg.setAttribute('viewBox', `0 0 150 ${totalSvgHeight}`);
 
         let flowersHtml = '';
         for (let i = 1; i <= this.plantGrowth; i++) {
             if (i > 0 && i % 5 === 0) {
                 const flowerY = 150 - (i * 25 - 25);
-                const flowerX = 50 + (i % 10 === 0 ? -15 : 15);
+                const flowerX = 75 + (i % 10 === 0 ? -20 : 15);
                 flowersHtml += `<g><path fill="#000" d="M${flowerX - 9} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h1 M${flowerX - 9} ${flowerY + 4} h1 M${flowerX + 7} ${flowerY + 4} h1 M${flowerX - 4} ${flowerY - 9} v1 M${flowerX + 4} ${flowerY - 9} v1 M${flowerX - 4} ${flowerY + 7} v1 M${flowerX + 4} ${flowerY + 7} v1"/><path fill="white" d="M${flowerX - 8} ${flowerY - 4} h1 M${flowerX + 7} ${flowerY - 4} h-1 M${flowerX - 8} ${flowerY + 3} h1 M${flowerX + 7} ${flowerY + 3} h-1 M${flowerX - 4} ${flowerY - 8} v1 M${flowerX + 3} ${flowerY - 8} v1 M${flowerX - 4} ${flowerY + 7} v-1 M${flowerX + 3} ${flowerY + 7} v-1"/><rect x="${flowerX - 2}" y="${flowerY - 7}" width="4" height="2" fill="white"/><rect x="${flowerX - 2}" y="${flowerY + 5}" width="4" height="2" fill="white"/><rect x="${flowerX - 7}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX + 5}" y="${flowerY - 2}" width="2" height="4" fill="white"/><rect x="${flowerX - 2}" y="${flowerY - 2}" width="4" height="4" fill="#FBBF24"/></g>`;
             }
         }
 
+        // SVGの下端が揃うように、植物全体を上に移動
+        const yTranslate = totalSvgHeight - 200;
+
         finalPlantSvg.innerHTML = `
-             <g transform="translate(0, ${totalSvgHeight - 200})">
-                 ${flowersHtml}
-                 <rect id="plantStem" x="48" y="${150 - this.plantGrowth * 25}" width="4" height="${this.plantGrowth * 25}" fill="#22C55E" stroke="#166534" stroke-width="1"/>
-                 ${this.getLeafSvg(this.plantGrowth * 25).replace('<g transform="translate(0,', '<g transform="translate(-25,')}
-                 <g>
-                     <path fill="#000" d="M33 148 H67 V149 H68 V150 H69 V171 H68 V172 H65 V173 H35 V172 H32 V171 H31 V150 H32 V149 H33 V148"/>
-                     <path fill="#d97706" d="M34 149 H66 V150 H34 V149 M33 150 H32 V171 H33 V150 M67 150 H68 V171 H67 V150 M35 172 H65 V171 H35 V172"/>
-                     <path fill="#f59e0b" d="M34 150 H66 V171 H34 V150"/>
-                 </g>
+            <g transform="translate(0, ${yTranslate})">
+                ${flowersHtml}
+                <rect x="73" y="${150 - growthHeight}" width="4" height="${growthHeight}" fill="#22C55E" stroke="#166534" stroke-width="1"/>
+                
+                <g transform="translate(0, ${-growthHeight})">
+                    ${this.getLeafSvg()}
+                </g>
+                
+                <g transform="translate(25, 0)">
+                    <path fill="#000" d="M33 148 H67 V149 H68 V150 H69 V171 H68 V172 H65 V173 H35 V172 H32 V171 H31 V150 H32 V149 H33 V148"/>
+                    <path fill="#d97706" d="M34 149 H66 V150 H34 V149 M33 150 H32 V171 H33 V150 M67 150 H68 V171 H67 V150 M35 172 H65 V171 H35 V172"/>
+                    <path fill="#f59e0b" d="M34 150 H66 V171 H34 V150"/>
+                </g>
             </g>
         `;
 

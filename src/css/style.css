@@ -113,12 +113,15 @@ body::before {
 }
 
 /* plant animation */
-#wateringCan.animate { animation: pour 1.5s ease-in-out; }
+#wateringCan.animate { 
+    animation: pour 1.5s ease-in-out; 
+    transform-origin: 30% 80%; /* 回転の中心を調整 */
+}
 @keyframes pour {
-    0% { transform: translate(-50%, -20%) rotate(0deg); }
-    30% { transform: translate(-50%, -20%) rotate(-45deg); }
-    70% { transform: translate(-50%, -20%) rotate(-45deg); }
-    100% { transform: translate(-50%, -20%) rotate(0deg); }
+    0% { transform: rotate(0deg); }
+    30% { transform: rotate(-45deg); }
+    70% { transform: rotate(-45deg); }
+    100% { transform: rotate(0deg); }
 }
 
 .water-drop { opacity: 0; animation: drop 1.5s linear infinite; }
