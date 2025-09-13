@@ -246,9 +246,24 @@ class GeographyGame {
         } else { // 不正解または初回表示
             this.growPlant(false);
             if (this.currentQuestionIndex > 0) { // 初回以外で不正解なら萎れる
+                // ★★★★★ 修正ここから ★★★★★
+                const currentHeight = this.plantGrowth * 25;
+                // 現在の葉の位置をCSSカスタムプロパティとして設定
+                plantLeaves.style.setProperty('--wilt-start-y', `translate(0, ${-currentHeight}px)`);
+                // しおれて少し下がる位置を設定
+                plantLeaves.style.setProperty('--wilt-end-y', `translate(0, ${-currentHeight + 10}px)`);
+
                 plantLeaves.classList.add('wilt');
-                plantEffect.classList.add('wilt'); plantEffect.classList.remove('hidden');
-                setTimeout(() => plantLeaves.classList.remove('wilt'), 1500);
+                plantEffect.classList.add('wilt');
+                plantEffect.classList.remove('hidden');
+
+                setTimeout(() => {
+                    plantLeaves.classList.remove('wilt');
+                    // アニメーション後にカスタムプロパティを削除
+                    plantLeaves.style.removeProperty('--wilt-start-y');
+                    plantLeaves.style.removeProperty('--wilt-end-y');
+                }, 1500);
+                // ★★★★★ 修正ここまで ★★★★★
             }
         }
     }
@@ -459,8 +474,12 @@ class GeographyGame {
 
         const plantHeightCm = this.plantGrowth * 10;
         const growthHeight = this.plantGrowth * 25;
-        // SVG全体の高さを、植物の成長に合わせて動的に変更
-        const totalSvgHeight = Math.max(200, growthHeight + 75);
+
+        // ★★★★★ 修正点 1 ★★★★★
+        // SVGの表示領域の高さを、植物全体の高さ（茎＋葉＋鉢植え）に合わせる
+        // これにより、不要な余白がなくなり、植物が正しく拡大表示される
+        const totalSvgHeight = growthHeight + 50; // 50 = 鉢の高さ(約25) + 葉の高さ(約25)
+
         finalPlantSvg.setAttribute('viewBox', `0 0 150 ${totalSvgHeight}`);
 
         let flowersHtml = '';
@@ -472,10 +491,9 @@ class GeographyGame {
             }
         }
 
-        // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-        // 修正点: 植木鉢の底の座標(173)を基準にY方向の移動量を計算
-        const yTranslate = totalSvgHeight - 173;
-        // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+        // ★★★★★ 修正点 2 ★★★★★
+        // 新しいviewBoxの高さに合わせて、植物全体を移動させる量を再計算
+        const yTranslate = totalSvgHeight - 173; // 173は鉢の底のY座標
 
         finalPlantSvg.innerHTML = `
             <g transform="translate(0, ${yTranslate})">

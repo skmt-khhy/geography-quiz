@@ -141,7 +141,15 @@ body::before {
 }
 
 #plantLeaves.wilt { animation: wilt-anim 1.5s ease-in-out; }
-@keyframes wilt-anim { 0%,100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+@keyframes wilt-anim { 
+    /* JSから渡された変数を使い、現在の高さからアニメーションを開始する */
+    0%, 100% { 
+        transform: var(--wilt-start-y); 
+    } 
+    50% { 
+        transform: var(--wilt-end-y); 
+    } 
+}
 
 /* Heart Fall Animation */
 .heart-fall {
